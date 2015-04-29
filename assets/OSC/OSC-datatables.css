@@ -1,0 +1,314 @@
+/* Bootstrap Navbar*/
+	.navbar {
+	    margin:0;
+	}
+
+	.navbar-brand {
+		padding-top: 5px;
+	}
+
+/* Table caption */
+	div#table_container caption { 
+		padding-bottom: 20px; 
+		padding-top: 0px; 
+	}
+
+	div#table_container caption span.search { 
+		font-weight: bold;
+	}
+
+	div#table_container caption span.filter { 
+		display: block; 
+		margin-top: 2px;
+		font-size: .85em;
+	}
+
+/* Prevent column headers from wrapping */
+	div#table_container thead th { 
+		white-space: nowrap; 
+	}
+
+/* Minimally style the filter row */
+	div#table_container thead {
+	 	background-color: lightgray;
+	 }
+
+	div#table_container tfoot {
+	    display: table-header-group;
+	    background-color: lightgray;
+	 }
+
+	div#table_container tfoot th {
+	    padding-left: 0px;
+	    padding-right: 0px;
+	    font-weight: normal;
+	 }
+
+	div#table_container table input.filter_box {
+	     width: 100%;
+	     padding-left: 4px;
+	 }
+
+	 div#table_container table input.invalid {
+	     border: solid 1px red;
+	 }
+
+/* Reset all filters link */
+	div#table_container div.filter_wrapper {
+		position: relative;
+	}
+
+	div#table_container thead {
+		margin-top: 20px;
+	}
+
+	div#table_container a#reset_filters {
+		display: block;
+		position: absolute;
+		/*moved by jquery too!*/
+		top: 20px;
+		right: 0px;
+		font-size: .8em;
+		color: gray;
+		text-decoration: underline;
+	}
+
+
+/* Shared Styles for Switches*
+/* Technique from: */
+/* https://www.paypal-engineering.com/2014/01/15/a-sweet-toggle-switch/ */
+
+	div#table_container .switch label {	  
+	  display: inline-block;
+	  float: left;
+	  text-align: center;
+	  cursor: pointer;
+	  color: black;
+	  padding: .2em;
+	  background-color: #ddd;
+	  border: #999 2px solid;
+
+	  /*for each switch, specify separately*/
+	  /*margin-top: 0px*/
+	  /*width: 6em;*/
+	}
+
+	div#table_container .switch label:first-of-type {
+	  border-top-left-radius: .5em;
+	  border-bottom-left-radius: .5em;
+	}
+	div#table_container .switch label:last-of-type {
+	  border-top-right-radius: .5em;
+	  border-bottom-right-radius: .5em;
+	}
+
+	div#table_container .switch input[type="radio"]:checked+label {
+	  background-color: #337ab7;
+	  border: #428bca 2px solid;
+	  color: white;
+	}
+
+	div#table_container .switch input[type="radio"]:focus+label {
+	  outline: 2px #999 dotted;
+	}
+
+	div#table_container .switch label:hover,
+	div#table_container .switch label:focus {
+	  background-color: #ccc;
+	  border: #000 2px solid;
+	  color: #000;
+	}
+
+/* The Table Mode switch*/
+
+	div#table_container .table-mode .switch label {
+		margin-top: 9px;
+		width: 6em;
+	}
+
+
+	/* Label (description div) */
+	div#table_container .table-mode div#table-mode-description {
+		display: inline-block;
+		float:left;
+		padding-right: 7px;
+		/* to align with center of labels... */
+		/* ... margin-top of labels plus 5 */
+		margin-top: 14px;
+
+	}
+
+	/* Instructions div (hidden) */
+	div#table_container .table-mode div#table-mode-instructions {
+		display: inline-block;
+		padding-bottom: 15px;
+		/*hidden using bootstrap classes sr-only and sr-only focusable*/
+	}
+
+/* The Filter Format Switch*/
+	div#table_container .filter-format .switch label {
+		margin-top: -6px;
+		width: 4em;
+	}
+
+	/* Label (description div) */
+	div#table_container .filter-format div#table-filter-description {
+		display: inline-block;
+		float:left;
+		padding-right: 5px;
+		/* to align with center of labels... */
+		/* ... margin-top of labels plus 5 */
+		margin-top: -1px;
+
+	}
+
+	/* Instructions div (hidden) */
+	div#table_container .filter-format div#table-filter-instructions {
+		display: inline-block;
+		padding-bottom: 15px;
+		/*hidden using bootstrap classes sr-only and sr-only focusable*/
+	}
+
+/* The Download Button*/
+
+	/* Label (description div) */
+	div#table_container .export-table div#export-table-description {
+		display: inline-block;
+		float:left;
+		padding-right: 5px;
+		/* to align with center of labels... */
+		/* ... margin-top of labels plus 5 */
+		margin-top: 5px;
+
+	}
+
+	div#table_container .export-table button {
+		margin-bottom: 6px;
+		margin-left: -2px;
+		padding: 4px 12px;
+	}
+
+	
+/* Tweaks to align the table footer, with basic/advanced controls */
+	div#table_container div.table-footer {
+		padding-top: 2px;
+		padding-bottom: 15px;
+	}
+
+	div#table_container div.table-details {
+		padding-left: 55px;
+	}
+
+	div#table_container div.dataTables_length {
+		float: left;
+	}
+
+	div#table_container div.dataTables_paginate {
+		margin-top: 8px;
+	}
+
+	div#table_container div.dataTables_info {
+		/*overwrite the DataTables default of nowrap. Weird. */
+		white-space:normal;
+	}
+
+	/* When paging breaks onto it's own line */
+	@media (max-width: 768px) {
+		div#table_container .table-mode div#table-mode-description {
+			margin-top: 8px;
+		}
+
+		div#table_container .table-mode .switch label {
+	  		margin-top: 3px;
+	  		margin-bottom: 10px;
+		}
+		div#table_container div.table-details {
+			padding-left: 0px;
+		}
+
+		div#table_container div.dataTables_paginate ul {
+			float: left;
+		}
+	}
+
+/*The Tags*/
+	div#table_container td.tags span {
+		background-color: grey;
+		color: #FFF;
+		border-radius: 8px;
+		line-height: 1.6em;
+		padding: 0px 1em 2px;
+		font-size: .9em;
+		margin: 0px 5px 5px 0px;
+		display: inline-block;
+	}	
+
+/*Boolean Search Instructions*/
+	div#instructions {
+     visibility: hidden;
+     position: fixed;
+     left: 0px;
+     top: 0px;
+     width:100%;
+     height:100%;
+     z-index: 1000;
+     background-color: rgba(0, 0, 0, 0.5);
+    }
+
+    div#instructions div {
+     width:500px;
+     margin: 100px auto;
+     background-color: #fff;
+     border-left:1px solid #000;
+     border-bottom:1px solid #000;
+     padding-left:15px;
+     padding-bottom:15px;
+     font-size: 1em;
+	}
+
+	div#instructions h2{
+		text-align:center;
+	}
+
+	div#instructions li.not-allowed {
+		text-decoration: line-through; color: red;
+	}
+
+	div#instructions p.close {
+		text-align: center;
+		margin-top: 35px;
+	}
+
+	div#instructions span.close {
+		display: block;
+		text-align: right;
+		font-family: sans-serif;
+		font-weight: bold;
+		font-size: 2em;
+		
+	}
+
+	div#instructions span.close a {
+		display: inline-block;
+		padding: 5px;
+		border: 1px solid black;
+		text-decoration: none;
+		color: black;
+	}
+
+	div#instructions ol > li {
+		padding-bottom: 15px;
+	}
+
+	p.help {
+	  margin-bottom: 0px;
+	  margin-top: 3px;
+	  margin-left: 10px;
+	  margin-right: -10px;
+	  font-size: 1.5em;
+	  /*color: #337ab7!important;*/
+	  cursor: pointer;
+	}
+	
+
+	

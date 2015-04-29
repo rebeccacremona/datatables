@@ -1,0 +1,49 @@
+<!-- jQuery (1.x with IE < 9) -->
+	<!-- Using a CDN so that, if assets are compiled and minified, this won't be included -->
+	<!--[if lt IE 9]>
+		<script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<![endif]-->
+
+<!-- jQuery (2.x with all other browsers) -->    
+	<!--[if gte IE 9]><!-->
+	    <script src="assets/jquery/jquery-2.1.3.min.js"></script>
+	<!--<![endif]-->
+
+<!-- Bootstrap -->
+    <script src="assets/bootstrap-3.3.4/js/bootstrap.min.js"></script>
+    <link href="assets/bootstrap-3.3.4/css/bootstrap.min.css" rel="stylesheet">
+
+<!-- DataTables -->
+    <script src="assets/DataTables-1.10.6/js/jquery.dataTables.min.js"></script>
+    <!-- We don't need the DataTables default styles, since we're using Bootstrap -->
+    <script src="assets/dataTables-responsive/js/dataTables-responsive.min.js"></script>
+    <link href="assets/dataTables-responsive/css/dataTables-responsive.css" rel="stylesheet">
+
+<!-- DataTables-Bootstrap -->
+    <script src="assets/dataTables-bootstrap/dataTables.bootstrap.min.js"></script>
+    <link href="assets/dataTables-bootstrap/dataTables.bootstrap.css" rel="stylesheet">
+
+<!-- Paypal Bootstrap Accessibility Plugin -->
+    <script src="assets/bootstrap-accessibility/1.0.3.min.js"></script>
+    <link href="assets/bootstrap-accessibility/1.0.3.css" rel="stylesheet">
+
+<!-- OSC Common Code -->
+    <script> var OSC={} </script>
+    <script src="assets/OSC/OSC-utilities.js"></script>
+    <script src="assets/OSC/OSC-bool-to-regex.js"></script>
+    <script src="assets/OSC/OSC-datatables.js"></script>
+    <link href="assets/OSC/OSC-datatables.css" rel="stylesheet">
+   
+
+
+<!-- App-Specific Code -->
+    <script src="assets/this-app/this-app.js"></script>
+    <link href="assets/this-app/this-app.css" rel="stylesheet">
+    <script> OSC.data = <?php require("data.php") ?> </script>
+
+<!-- Keep this last: Fix up old versions of IE -->
+	<!-- Using a CDN so that, if assets are compiled and minified, this won't be included -->
+    <!--[if lt IE 9]>
+      <script src="//oss.maxcdn.com/html5shiv/3.7.2/html5shiv.min.js"></script>
+      <script src="//oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
+    <![endif]-->
