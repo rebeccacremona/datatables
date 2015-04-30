@@ -31,18 +31,36 @@ $(document).ready(function() {
 // Here: decline the built-in search box and create structure for the fancy footer.
 // ... eg, "dom": 'tip', with all the Bootstrap structure, plus the fancy footer.
     
-    var row_table = '<"row"<"col-sm-12"t>>'; 
-    var row_mode_and_pagination = '<"row"<"col-sm-6 col-xs-12 col-sm-push-6"p><"col-sm-6 col-sm-pull-6 col-xs-12 table-mode">>';
+    
+    if (OSC.table_controls=="top"){
+      // Technique from http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
+      OSC.load_css("assets/OSC/OSC-datatables-top.css");
 
-    var row_filter_switch = '<"row"<"col-sm-12 filter-format">>';
-    var row_export = '<"row"<"col-sm-12 export-table">>';
-    var row_entries_length = '<"row"<"col-sm-12"l>>';
+      var row_mode_and_pagination = '<"table-mode"><""p>';
+      var row_filter_switch = '<"filter-format">';
+      var row_export = '<"export-table">';
+      var row_entries_length = '<l>';
+      var table_details = '<"table-details"'+ row_entries_length + row_export + row_filter_switch +'>';
+    
+    } else {
+      var row_mode_and_pagination = '<"row"<"col-sm-6 col-xs-12 col-sm-push-6"p><"col-sm-6 col-sm-pull-6 col-xs-12 table-mode">>';
+      var row_filter_switch = '<"row"<"col-sm-12 filter-format">>';
+      var row_export = '<"row"<"col-sm-12 export-table">>';
+      var row_entries_length = '<"row"<"col-sm-12"l>>';
+      var table_details = '<"table-details"' + row_filter_switch + row_export + row_entries_length + '>';
+    
+    }
 
-    var table_details = '<"table-details"'+ row_filter_switch + row_export + row_entries_length +'>';
-
+    var row_table = '<"row"<"col-sm-12"t>>';
+    
+    
     // Allow individual apps to override
     if (!OSC.dom) {
-      OSC.dom = row_table + '<"table-footer"'+ row_mode_and_pagination + table_details + '>';
+      if (OSC.table_controls=="top"){
+        OSC.dom = '<"table-footer"'+ row_mode_and_pagination + table_details + '>' + row_table ;
+      } else {
+        OSC.dom = row_table + '<"table-footer"'+ row_mode_and_pagination + table_details + '>';
+      }
     }
 
 // 
@@ -61,8 +79,8 @@ $(document).ready(function() {
 
         "language": {
           "paginate": {
-            "previous": "&lt;&lt;",
-            "next": "&gt;&gt;"
+            "previous": "&lt;",
+            "next": "&gt;"
           }
         },
         
@@ -133,6 +151,27 @@ $(document).ready(function() {
       $("#table-mode-advanced").prop("checked", "checked");
     }
 
+// FEATURE: Disable advanced mode for xs screens, when using top buttons
+// http://krasimirtsonev.com/blog/article/Using-media-queries-in-JavaScript-AbsurdJS-edition
+
+    if(OSC.table_controls=="top"){
+      var mq = window.matchMedia('all and (max-width: 570px)');
+      if(mq.matches) {
+          $("#table-mode-basic").prop("checked", "checked").trigger("change");
+          $("div.table-mode").hide();
+      } 
+
+      mq.addListener(function(changed) {
+          if(changed.matches) {
+              $("#table-mode-basic").prop("checked", "checked").trigger("change");
+              $("div.table-mode").hide();
+          } else {
+             $("div.table-mode").show();
+          }
+      });
+
+
+    }
 
 // FEATURE: Apply the column searches
 
@@ -334,10 +373,24 @@ OSC.dt.update_caption = function(info){
     if(OSC.search_string){
       var search_info_span = "<span class='search'>Search Results for: " + OSC.search_string + "</span>";
       var new_cap = search_info_span + filter_span;
-      $("a#reset_filters").css( "top",  "40px" );
+      if (OSC.table_controls=="top"){
+        $("a#reset_filters").css( "top",  "65px" );
+        $("div.table-mode").css("top", "50px");
+        $("div.dataTables_paginate").css("top", "50px");
+        $("div.table-details").css("top", "65px");
+      } else {
+        $("a#reset_filters").css( "top",  "40px" );
+      }
     } else {
       var new_cap = filter_span;
-      $("a#reset_filters").css( "top",  "23px" );
+      if (OSC.table_controls=="top"){;
+        $("a#reset_filters").css( "top",  "45px" );
+        $("div.table-mode").css("top", "32px");
+        $("div.dataTables_paginate").css("top", "32px");
+        $("div.table-details").css("top", "45px");
+      } else {
+        $("a#reset_filters").css( "top",  "23px" )
+      }
     }
     var caption = $("#table_container caption");
     
