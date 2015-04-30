@@ -21,7 +21,7 @@
     // ... top
     // ... bottom
     // ... (undefined defaults to bottom)
-    OSC.table_controls = "top";
+    OSC.table_controls = "bottom";
 
 
     // Best practices, defining columns:
