@@ -1,0 +1,85 @@
+/*Controls on top overwrites*/
+div#table_container caption {
+  padding-bottom: 45px;
+}
+
+div#table_container div.table-footer {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+div#table_container .table-mode {
+  padding: 0px;
+  display: inline-block;
+  position: absolute;
+  top: 25px;
+  left:0;
+  z-index: 1000;
+}
+
+div#table_container .table-mode .switch label {
+  width: 5.5em;
+  font-size: .8em;
+ }
+
+div#table_container .table-mode div#table-mode-description {
+  display:none;
+}
+
+div#table_container div.dataTables_paginate {
+  margin-top: -3px;
+  display: inline-block;
+  position: absolute;
+  top: 27px;
+  right:0;
+  z-index: 1000;
+}
+
+div.table-details {
+  font-size: .8em;
+  position: absolute;
+  top:45px;
+  left: 60px;
+  z-index: 1000;
+}
+
+div.table-details div {
+  display: inline-block;
+  margin-top: 0px;
+  padding-left: 10px;
+}
+
+div#table_container div.dataTables_length {
+  padding-left: 15px;
+}
+
+div#table_container div.dataTables_length select.input-sm {
+  height: 19px;
+}
+
+div#table_container .export-table button {
+  margin-top: -20px;
+  padding: 2px 8px;
+}
+
+div#table_container .export-table div#export-table-description {
+  margin-top: -10px;
+  padding-left: 10px;
+}
+
+div#table_container .filter-format .switch {
+  margin-left: -10px;
+}
+
+div#table_container .filter-format .switch label {
+  width: 5.5em;
+}
+
+div#table_container .filter-format div#table-filter-description {
+  padding-left: 5px;
+}
+
+div#table_container a#reset_filters {   
+  top: 45px;
+  left: 555px;
+}

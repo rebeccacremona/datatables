@@ -11,6 +11,8 @@
 	div#table_container caption { 
 		padding-bottom: 20px; 
 		padding-top: 0px; 
+		position: relative;
+		z-index: -1;
 	}
 
 	div#table_container caption span.search { 
@@ -309,6 +311,5 @@
 	  /*color: #337ab7!important;*/
 	  cursor: pointer;
 	}
-	
 
-	
+

@@ -11,11 +11,17 @@
     // ... basic (appears on page load), 
     // ... advanced (appears in advanced mode),
     // ... none
-    OSC.filters = "basic";
+    OSC.filters = "advanced";
 
     // Load in advanced mode:
     // ... true/false
     OSC.advanced_mode = false;
+
+    // Table controls:
+    // ... top
+    // ... bottom
+    // ... (undefined defaults to bottom)
+    OSC.table_controls = "top";
 
 
     // Best practices, defining columns:

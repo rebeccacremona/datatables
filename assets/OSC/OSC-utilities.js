@@ -78,3 +78,12 @@ OSC.parse_tags = function(str) {
 OSC.reverse_parse_tags = function(string){
   return string.replace(/<span>/g, "").replace(/<\/span>/g, ",");
 }
+
+OSC.load_css = function(filepath){
+  var fileref = document.createElement("link");
+  fileref.setAttribute("rel", "stylesheet");
+  fileref.setAttribute("href", filepath);
+  if (typeof fileref!="undefined"){
+        document.getElementsByTagName("head")[0].appendChild(fileref);
+  }
+}
