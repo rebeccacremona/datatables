@@ -568,7 +568,7 @@ OSC.dt.prep_url = function(table){
 
   // Sorting portion
   var s_string = "";
-  var sorting = settings.aaSorting;
+  var sorting = table.order();
   for (var i=0, len=sorting.length; i < len; i++){
         var sorted_column = sorting[i][0];
         s_string +=  "&SS" + encodeURIComponent(columns[sorted_column].name) + "=" + sorting[i][1];  
