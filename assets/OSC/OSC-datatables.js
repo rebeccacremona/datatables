@@ -228,12 +228,8 @@ $(document).ready(function() {
     table.columns().search( '' ).draw();
     
     // ...then push to browser history
-    if (OSC.search_string && OSC.search_string != "(all records)"){
-      var q_string = "?q=" + encodeURIComponent(OSC.html_unescape(OSC.search_string));
-    } else {
-      var q_string = "/";
-    }
-    history.pushState(null, "", q_string);
+    var q_string = OSC.dt.prep_url(table);
+        history.pushState(null, "", q_string);
   });
 
 // FEATURE: Apply a global boolean search to the table
@@ -264,7 +260,7 @@ $(document).ready(function() {
         table.columns().search( '' ).draw();
 
         // Push to browser history
-        var q_string = "?q=" + encodeURIComponent(input.trim());
+        var q_string = OSC.dt.prep_url(table);
         history.pushState(null, "", q_string);
               
         
