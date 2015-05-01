@@ -552,26 +552,70 @@ OSC.dt.prep_url = function(table){
     var q_string = "";
   }
 
-  // Prep filters portion
-  var f_string = "";
-  var filters = table.settings()["0"].aoPreSearchCols;
-  var columns = table.settings()["0"].aoColumns;
-  for (var i=0, len=columns.length; i < len; i++){
-    var filter_string = filters[i].sSearch;
-    if (filter_string){
-      f_string +=  "&" + encodeURIComponent(columns[i].name) + "=" + encodeURIComponent(filter_string);
+  // Prep filters and sorting portion
+  var settings = table.settings()["0"];
+  var columns = settings.aoColumns;
+
+    // Filter portion
+    var f_string = "";
+    var filters = settings.aoPreSearchCols;
+    for (var i=0, len=columns.length; i < len; i++){
+      var filter_string = filters[i].sSearch;
+      if (filter_string){
+        f_string +=  "&" + encodeURIComponent(columns[i].name) + "=" + encodeURIComponent(filter_string);
+      }
     }
+
+  // Sorting portion
+  var s_string = "";
+  var sorting = settings.aaSorting;
+  for (var i=0, len=sorting.length; i < len; i++){
+        var sorted_column = sorting[i][0];
+        s_string +=  "&SS" + encodeURIComponent(columns[sorted_column].name) + "=" + sorting[i][1];  
   }
                 
   // Assemble
-  if (q_string) {
-    var assembled = "?" + q_string + f_string;
+  if (q_string && f_string && s_string){
+    var state = "all";
+  } else if (q_string && f_string){
+    var state = "q&f";
+  } else if (q_string && s_string){
+    var state = "q&s";
+  } else if (f_string && s_string){
+    var state = "f&s";
+  } else if (q_string){
+    var state = "q";
   } else if (f_string){
-    var assembled = "?" + f_string.slice(1);    
+    var state = "f";
+  } else if (s_string){
+    var state = "s";
+  }
+
+  switch (state) {
+    case "all":
+      var assembled = "?" + q_string + f_string + s_string;
+      break;
+    case "q&f":
+      var assembled = "?" + q_string + f_string;
+      break;
+    case "q&s":
+      var assembled = "?" + q_string + s_string;
+      break;
+    case "f&s":
+      var assembled = "?" + f_string.slice(1) + s_string;
+      break;
+    case "q":
+      var assembled = "?" + q_string;
+      break;
+    case "f":
+      var assembled = "?" + f_string.slice(1);
+      break;
+    case "s":
+      var assembled = "?" + s_string.slice(1);
+      break;
   }
 
   return assembled;
-
 
 }
 
