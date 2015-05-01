@@ -272,6 +272,18 @@ $(document).ready(function() {
 
 // FEATURE: capture sort order
 
+  // You can't use the built in "sort" event: it fires on every draw.
+  // $('#' + OSC.table_id).on( 'order.dt', function (e, settings) {
+  //     alert("The table was sorted!");
+  // } );
+  // Apparently, there will be a dt event for this in DT 2.0
+  // http://datatables.net/forums/discussion/5141/capturing-sort-event-on-table-heading
+
+  $('#' + OSC.table_id + " thead th:not(.sorting_disabled)").on( 'click', function () {
+      var q_string = OSC.dt.prep_url(table);
+      history.pushState(null, "", q_string);
+  } );
+
 
 // FEATURE: export to TSV
 
@@ -293,6 +305,7 @@ $(document).ready(function() {
 // FEATURE: content editable
   // Event assigned this way since tds are created/destroyed when paged, filtered, etc.
   // https://www.datatables.net/examples/advanced_init/events_live.html
+  // (but... this might be causing the accessibility problem with tabs and editable fields)
   $('#table_container tbody').on('blur', 'td[contenteditable=true]', function () {
         var id = this.id;
         var d = id.split('_');
