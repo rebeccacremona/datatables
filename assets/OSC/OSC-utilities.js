@@ -81,7 +81,7 @@ OSC.reverse_parse_tags = function(string){
 
 OSC.filter_tags = function(string){
   try {
-      return data.replace(/, /g, '\n').replace(/,/g, '\n');
+      return string.replace(/, /g, '\n').replace(/,/g, '\n');
   } catch(err) {
       return "";
   }
