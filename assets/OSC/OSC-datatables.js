@@ -159,6 +159,7 @@ $(document).ready(function() {
       if(mq.matches) {
           $("#table-mode-basic").prop("checked", "checked").trigger("change");
           $("div.table-mode").hide();
+          // TO DO: decide what to do with filters specified via URL. Reset?
       } 
 
       mq.addListener(function(changed) {
@@ -226,10 +227,11 @@ $(document).ready(function() {
     
     $("#table_container tfoot input").val("");
     table.columns().search( '' ).draw();
+    // TO DO: remove any class="invalid" too
     
     // ...then push to browser history
     var q_string = OSC.dt.prep_url(table);
-        history.pushState(null, "", q_string);
+    history.pushState(null, "", q_string);
   });
 
 // FEATURE: Apply a global boolean search to the table
@@ -266,7 +268,7 @@ $(document).ready(function() {
         
     }); 
 
-// FEATURE: capture sort order
+// FEATURE: Capture sort order
 
   // You can't use the built in "sort" event: it fires on every draw.
   // $('#' + OSC.table_id).on( 'order.dt', function (e, settings) {
@@ -281,7 +283,14 @@ $(document).ready(function() {
   } );
 
 
-// FEATURE: export to TSV
+// FEATURE: Search and filter from URL
+  OSC.dt.load_from_URL(table);
+  window.onpopstate = function(event) {
+    OSC.dt.load_from_URL(table);
+  };
+
+
+// FEATURE: Export to TSV
 
   $("#export_tsv").click(function(){      
         // Prevent the form from submitting
@@ -293,12 +302,8 @@ $(document).ready(function() {
 
   });
 
-// FEATURE: search and filter from URL
-  OSC.dt.load_from_URL(table);
-  window.onpopstate = function(event) {OSC.dt.load_from_URL(table);};
-    
 
-// FEATURE: content editable
+// FEATURE: Make specified content editable
   // Event assigned this way since tds are created/destroyed when paged, filtered, etc.
   // https://www.datatables.net/examples/advanced_init/events_live.html
   // (but... this might be causing the accessibility problem with tabs and editable fields)
@@ -454,9 +459,10 @@ OSC.dt.load_from_URL = function(table){
   
   } else {
     
-    // Reset the filters
+    // Reset the filters and sorts
     $("#table_container tfoot input").val("");
     table.columns().search( '' );
+    table.order.neutral();
 
     // Apply any global search...
     if (params["q"]) {
@@ -478,16 +484,34 @@ OSC.dt.load_from_URL = function(table){
       table.search( "", true, false );
     }
     
-    // Apply any filters.
-    var filters = params;
-    if (!$.isEmptyObject(filters)) {
-      for (var col_name in filters){    
-          var column = table.column( col_name + ":name" ); 
+    // Apply any filters and sorts.
+    var f_and_s = params;
+    if (!$.isEmptyObject(f_and_s)) {
+      
+      var sorts = [];
+      for (var param in f_and_s){    
           
-          // make the text display in the input element   
-          $( column.footer() ).children().first().val(decodeURIComponent(filters[col_name]));
-          // apply the column search (but don't redraw the table)
-          column.search( decodeURIComponent(filters[col_name]), true, false );
+          // If it's a sort...
+          if (param.slice(0,2)=="SS"){
+            var col_name = param.slice(2);
+            var column_index = table.column( col_name + ":name" ).index();
+            // add to list of sorts to apply
+            sorts.push([column_index, f_and_s[param]]);
+          } 
+          // If it's a filter...
+          else {
+            var col_name = param;
+            var column = table.column( col_name + ":name" ); 
+            // make the text display in the input element   
+            $( column.footer() ).children().first().val(decodeURIComponent(f_and_s[col_name]));
+            // apply the column search (but don't redraw the table)
+            column.search( decodeURIComponent(f_and_s[col_name]), true, false );
+          }          
+      }
+
+      // If there are any sorts, apply them (but don't redraw the table)
+      if (sorts){
+        table.order(sorts);
       }
     } 
     
@@ -627,6 +651,20 @@ OSC.dt.prep_url = function(table){
   return assembled;
 
 }
+
+// The DataTables plugin that allows us to restore sorts to their default
+// https://www.datatables.net/plug-ins/api/order.neutral%28%29
+$.fn.dataTable.Api.register( 'order.neutral()', function () {
+    return this.iterator( 'table', function ( s ) {
+        s.aaSorting.length = 0;
+        s.aiDisplay.sort( function (a,b) {
+            return a-b;
+        } );
+        s.aiDisplayMaster.sort( function (a,b) {
+            return a-b;
+        } );
+    } );
+} );
 
 // Accessibility ToDo:
 // Add a callback on redraw, that sets the keyboard focus.... somewhere sensible.
