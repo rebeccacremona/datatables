@@ -225,13 +225,17 @@ $(document).ready(function() {
   $("#reset_filters").click(function(){
     event.preventDefault()
     
+    // blank the filter inputs, and remove any "invalid" flags
     $("#table_container tfoot input").val("");
-    table.columns().search( '' ).draw();
-    // TO DO: remove any class="invalid" too
+    $("#table_container input").removeClass("invalid");
     
-    // ...then push to browser history
+    // reset the datatables filters, redraw the table
+    table.columns().search( '' ).draw(); 
+    
+    // then push to browser history
     var q_string = OSC.dt.prep_url(table);
     history.pushState(null, "", q_string);
+  
   });
 
 // FEATURE: Apply a global boolean search to the table
@@ -277,7 +281,7 @@ $(document).ready(function() {
   // Apparently, there will be a dt event for this in DT 2.0
   // http://datatables.net/forums/discussion/5141/capturing-sort-event-on-table-heading
 
-  $('#' + OSC.table_id + " thead th:not(.sorting_disabled)").on( 'click', function () {
+  $("#table_container thead th:not(.sorting_disabled)").on( 'click', function () {
       var q_string = OSC.dt.prep_url(table);
       history.pushState(null, "", q_string);
   } );
@@ -510,7 +514,7 @@ OSC.dt.load_from_URL = function(table){
       }
 
       // If there are any sorts, apply them (but don't redraw the table)
-      if (sorts){
+      if (sorts.length > 0 ){
         table.order(sorts);
       }
     } 
