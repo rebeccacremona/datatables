@@ -205,32 +205,9 @@ $(document).ready(function() {
                 .draw();
               
               // ...then push to browser history.
-                // Prep search query portion
-                if (OSC.search_string && OSC.search_string != "(all records)"){
-                  var q_string = "q=" + encodeURIComponent(OSC.html_unescape(OSC.search_string));
-                } else {
-                  var q_string = "";
-                }
-
-                // Prep filters portion
-                var f_string = "";
-                var filters = table.settings()["0"].aoPreSearchCols;
-                var columns = table.settings()["0"].aoColumns;
-                for (var i=0, len=columns.length; i < len; i++){
-                  var filter_string = filters[i].sSearch;
-                  if (filter_string){
-                    f_string +=  "&" + encodeURIComponent(columns[i].name) + "=" + encodeURIComponent(filter_string);
-                  }
-                }
-                
-                // Assemble and push
-                if (q_string) {
-                  var assembled = "?" + q_string + f_string;
-                  history.pushState(null, "", assembled);
-                } else if (f_string){
-                  var assembled = "?" + f_string.slice(1);
-                  history.pushState(null, "", assembled); 
-                }
+              var q_string = OSC.dt.prep_url(table);
+              history.pushState(null, "", q_string);
+             
           }
           catch (err) {
             // ...but if it's invalid, add a css class that makes the field red instead.
@@ -292,6 +269,8 @@ $(document).ready(function() {
               
         
     }); 
+
+// FEATURE: capture sort order
 
 
 // FEATURE: export to TSV
@@ -562,6 +541,38 @@ OSC.dt.add_instructions = function(){
 OSC.dt.overlay = function() {
   el = document.getElementById("instructions");
   el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
+}
+
+OSC.dt.prep_url = function(table){
+
+  // Prep search query portion
+  if (OSC.search_string && OSC.search_string != "(all records)"){
+    var q_string = "q=" + encodeURIComponent(OSC.html_unescape(OSC.search_string));
+  } else {
+    var q_string = "";
+  }
+
+  // Prep filters portion
+  var f_string = "";
+  var filters = table.settings()["0"].aoPreSearchCols;
+  var columns = table.settings()["0"].aoColumns;
+  for (var i=0, len=columns.length; i < len; i++){
+    var filter_string = filters[i].sSearch;
+    if (filter_string){
+      f_string +=  "&" + encodeURIComponent(columns[i].name) + "=" + encodeURIComponent(filter_string);
+    }
+  }
+                
+  // Assemble
+  if (q_string) {
+    var assembled = "?" + q_string + f_string;
+  } else if (f_string){
+    var assembled = "?" + f_string.slice(1);    
+  }
+
+  return assembled;
+
+
 }
 
 // Accessibility ToDo:
