@@ -113,7 +113,11 @@
             "render": {
                 "display": function( data, type, full, meta) {
                     return OSC.parse_tags(data);
+                },
+                "filter": function (data, type, full, meta){
+                    return OSC.filter_tags(data);
                 }
+
             },
         },
         { 
