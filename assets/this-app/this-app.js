@@ -11,7 +11,7 @@
     // ... basic (appears on page load), 
     // ... advanced (appears in advanced mode),
     // ... none
-    OSC.filters = "advanced";
+    OSC.filters = "basic";
 
     // Load in advanced mode:
     // ... true/false
@@ -26,8 +26,9 @@
 
     // Best practices, defining columns:
     // ... Always include a "defaultContent" attribute. (It's sort/searchable.)
-    // ... Always include a "name" attribute. It must be unique. It must not be "q".
+    // ... Always include a "name" attribute. It must be unique. It must not be "q" or start with "SS".
     // ... For performance, specify non-orderable (non-sorting) where possible.
+    // ... But, if you disable sort on the first column, do sort by another column by default.
     // ... Please don't specify non-searchable in particular columns.
     // ... To make editable:
     // ... ... className must include "edit". 

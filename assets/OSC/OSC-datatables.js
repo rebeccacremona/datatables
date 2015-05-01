@@ -159,6 +159,7 @@ $(document).ready(function() {
       if(mq.matches) {
           $("#table-mode-basic").prop("checked", "checked").trigger("change");
           $("div.table-mode").hide();
+          // TO DO: decide what to do with filters specified via URL. Reset?
       } 
 
       mq.addListener(function(changed) {
@@ -205,32 +206,9 @@ $(document).ready(function() {
                 .draw();
               
               // ...then push to browser history.
-                // Prep search query portion
-                if (OSC.search_string && OSC.search_string != "(all records)"){
-                  var q_string = "q=" + encodeURIComponent(OSC.html_unescape(OSC.search_string));
-                } else {
-                  var q_string = "";
-                }
-
-                // Prep filters portion
-                var f_string = "";
-                var filters = table.settings()["0"].aoPreSearchCols;
-                var columns = table.settings()["0"].aoColumns;
-                for (var i=0, len=columns.length; i < len; i++){
-                  var filter_string = filters[i].sSearch;
-                  if (filter_string){
-                    f_string +=  "&" + encodeURIComponent(columns[i].name) + "=" + encodeURIComponent(filter_string);
-                  }
-                }
-                
-                // Assemble and push
-                if (q_string) {
-                  var assembled = "?" + q_string + f_string;
-                  history.pushState(null, "", assembled);
-                } else if (f_string){
-                  var assembled = "?" + f_string.slice(1);
-                  history.pushState(null, "", assembled); 
-                }
+              var q_string = OSC.dt.prep_url(table);
+              history.pushState(null, "", q_string);
+             
           }
           catch (err) {
             // ...but if it's invalid, add a css class that makes the field red instead.
@@ -249,13 +227,10 @@ $(document).ready(function() {
     
     $("#table_container tfoot input").val("");
     table.columns().search( '' ).draw();
+    // TO DO: remove any class="invalid" too
     
     // ...then push to browser history
-    if (OSC.search_string && OSC.search_string != "(all records)"){
-      var q_string = "?q=" + encodeURIComponent(OSC.html_unescape(OSC.search_string));
-    } else {
-      var q_string = "/";
-    }
+    var q_string = OSC.dt.prep_url(table);
     history.pushState(null, "", q_string);
   });
 
@@ -287,14 +262,35 @@ $(document).ready(function() {
         table.columns().search( '' ).draw();
 
         // Push to browser history
-        var q_string = "?q=" + encodeURIComponent(input.trim());
+        var q_string = OSC.dt.prep_url(table);
         history.pushState(null, "", q_string);
               
         
     }); 
 
+// FEATURE: Capture sort order
 
-// FEATURE: export to TSV
+  // You can't use the built in "sort" event: it fires on every draw.
+  // $('#' + OSC.table_id).on( 'order.dt', function (e, settings) {
+  //     alert("The table was sorted!");
+  // } );
+  // Apparently, there will be a dt event for this in DT 2.0
+  // http://datatables.net/forums/discussion/5141/capturing-sort-event-on-table-heading
+
+  $('#' + OSC.table_id + " thead th:not(.sorting_disabled)").on( 'click', function () {
+      var q_string = OSC.dt.prep_url(table);
+      history.pushState(null, "", q_string);
+  } );
+
+
+// FEATURE: Search and filter from URL
+  OSC.dt.load_from_URL(table);
+  window.onpopstate = function(event) {
+    OSC.dt.load_from_URL(table);
+  };
+
+
+// FEATURE: Export to TSV
 
   $("#export_tsv").click(function(){      
         // Prevent the form from submitting
@@ -306,14 +302,11 @@ $(document).ready(function() {
 
   });
 
-// FEATURE: search and filter from URL
-  OSC.dt.load_from_URL(table);
-  window.onpopstate = function(event) {OSC.dt.load_from_URL(table);};
-    
 
-// FEATURE: content editable
+// FEATURE: Make specified content editable
   // Event assigned this way since tds are created/destroyed when paged, filtered, etc.
   // https://www.datatables.net/examples/advanced_init/events_live.html
+  // (but... this might be causing the accessibility problem with tabs and editable fields)
   $('#table_container tbody').on('blur', 'td[contenteditable=true]', function () {
         var id = this.id;
         var d = id.split('_');
@@ -466,9 +459,10 @@ OSC.dt.load_from_URL = function(table){
   
   } else {
     
-    // Reset the filters
+    // Reset the filters and sorts
     $("#table_container tfoot input").val("");
     table.columns().search( '' );
+    table.order.neutral();
 
     // Apply any global search...
     if (params["q"]) {
@@ -490,16 +484,34 @@ OSC.dt.load_from_URL = function(table){
       table.search( "", true, false );
     }
     
-    // Apply any filters.
-    var filters = params;
-    if (!$.isEmptyObject(filters)) {
-      for (var col_name in filters){    
-          var column = table.column( col_name + ":name" ); 
+    // Apply any filters and sorts.
+    var f_and_s = params;
+    if (!$.isEmptyObject(f_and_s)) {
+      
+      var sorts = [];
+      for (var param in f_and_s){    
           
-          // make the text display in the input element   
-          $( column.footer() ).children().first().val(decodeURIComponent(filters[col_name]));
-          // apply the column search (but don't redraw the table)
-          column.search( decodeURIComponent(filters[col_name]), true, false );
+          // If it's a sort...
+          if (param.slice(0,2)=="SS"){
+            var col_name = param.slice(2);
+            var column_index = table.column( col_name + ":name" ).index();
+            // add to list of sorts to apply
+            sorts.push([column_index, f_and_s[param]]);
+          } 
+          // If it's a filter...
+          else {
+            var col_name = param;
+            var column = table.column( col_name + ":name" ); 
+            // make the text display in the input element   
+            $( column.footer() ).children().first().val(decodeURIComponent(f_and_s[col_name]));
+            // apply the column search (but don't redraw the table)
+            column.search( decodeURIComponent(f_and_s[col_name]), true, false );
+          }          
+      }
+
+      // If there are any sorts, apply them (but don't redraw the table)
+      if (sorts){
+        table.order(sorts);
       }
     } 
     
@@ -563,6 +575,96 @@ OSC.dt.overlay = function() {
   el = document.getElementById("instructions");
   el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 }
+
+OSC.dt.prep_url = function(table){
+
+  // Prep search query portion
+  if (OSC.search_string && OSC.search_string != "(all records)"){
+    var q_string = "q=" + encodeURIComponent(OSC.html_unescape(OSC.search_string));
+  } else {
+    var q_string = "";
+  }
+
+  // Prep filters and sorting portion
+  var settings = table.settings()["0"];
+  var columns = settings.aoColumns;
+
+    // Filter portion
+    var f_string = "";
+    var filters = settings.aoPreSearchCols;
+    for (var i=0, len=columns.length; i < len; i++){
+      var filter_string = filters[i].sSearch;
+      if (filter_string){
+        f_string +=  "&" + encodeURIComponent(columns[i].name) + "=" + encodeURIComponent(filter_string);
+      }
+    }
+
+  // Sorting portion
+  var s_string = "";
+  var sorting = table.order();
+  for (var i=0, len=sorting.length; i < len; i++){
+        var sorted_column = sorting[i][0];
+        s_string +=  "&SS" + encodeURIComponent(columns[sorted_column].name) + "=" + sorting[i][1];  
+  }
+                
+  // Assemble
+  if (q_string && f_string && s_string){
+    var state = "all";
+  } else if (q_string && f_string){
+    var state = "q&f";
+  } else if (q_string && s_string){
+    var state = "q&s";
+  } else if (f_string && s_string){
+    var state = "f&s";
+  } else if (q_string){
+    var state = "q";
+  } else if (f_string){
+    var state = "f";
+  } else if (s_string){
+    var state = "s";
+  }
+
+  switch (state) {
+    case "all":
+      var assembled = "?" + q_string + f_string + s_string;
+      break;
+    case "q&f":
+      var assembled = "?" + q_string + f_string;
+      break;
+    case "q&s":
+      var assembled = "?" + q_string + s_string;
+      break;
+    case "f&s":
+      var assembled = "?" + f_string.slice(1) + s_string;
+      break;
+    case "q":
+      var assembled = "?" + q_string;
+      break;
+    case "f":
+      var assembled = "?" + f_string.slice(1);
+      break;
+    case "s":
+      var assembled = "?" + s_string.slice(1);
+      break;
+  }
+
+  return assembled;
+
+}
+
+// The DataTables plugin that allows us to restore sorts to their default
+// https://www.datatables.net/plug-ins/api/order.neutral%28%29
+$.fn.dataTable.Api.register( 'order.neutral()', function () {
+    return this.iterator( 'table', function ( s ) {
+        s.aaSorting.length = 0;
+        s.aiDisplay.sort( function (a,b) {
+            return a-b;
+        } );
+        s.aiDisplayMaster.sort( function (a,b) {
+            return a-b;
+        } );
+    } );
+} );
 
 // Accessibility ToDo:
 // Add a callback on redraw, that sets the keyboard focus.... somewhere sensible.
