@@ -113,7 +113,16 @@
             "render": {
                 "display": function( data, type, full, meta) {
                     return OSC.parse_tags(data);
+                },
+                "filter": function (data, type, full, meta){
+                    if(data) {
+                        console.log("'" + data.replace(/, /g, '\n').replace(/,/g, '') + "'");
+                        return data.replace(/, /g, '\n').replace(/,/g, '\n');
+                    } else {
+                        return "";
+                    }
                 }
+
             },
         },
         { 
