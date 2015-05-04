@@ -18,12 +18,11 @@ if ( !isset($_POST["data"])) {
 	$path = $editable[$data[0]]["path"];
 	$table = $editable[$data[0]]["table"];
 	$column = $editable[$data[0]]["column"];
+	$id = $data[1];
+    $content= $data[2];
 	
 	$db = new PDO('sqlite:' . $path);
 	$db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
-
-    $id = $data[1];
-    $content= $data[2];
       
 	if(!$db){
 	  $response['error'] = TRUE;
@@ -37,7 +36,6 @@ if ( !isset($_POST["data"])) {
 	// ...create a new row, or update existing one
 	$sql_exists = $db->prepare("SELECT id FROM {$table} WHERE id = :id");
 	$sql_exists->execute(array('id' => $id));
-	$sql_exists->rowCount() ? true : false;
 	$exists = $sql_exists->fetch(PDO::FETCH_ASSOC);
 
 	if ($exists){
