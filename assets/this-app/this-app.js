@@ -30,11 +30,10 @@
     // ... For performance, specify non-orderable (non-sorting) where possible.
     // ... But, if you disable sort on the first column, do sort by another column by default.
     // ... Please don't specify non-searchable in particular columns.
-    // ... To make editable:
-    // ... ... className must include "edit". 
+    // ... To make editable: 
     // ... ... for tag functionality, className must include "tags".
     // ... ... the id created in cellcallback must be formatted 'fieldname_' + rowData.id
-    // ... ... supply the db path and table name in OSC.editable[fieldname].path and OSC.editable[fieldname].table
+    // ... ... supply the db path, table name, and column name in editable.php
     // ... If you care, configure what'll happen at small screen sizes.
     // ... ... https://datatables.net/extensions/responsive/classes
     // ... Hidden columns don't work with the Responsive plugin. Instead,
@@ -94,7 +93,6 @@
             },
             "defaultContent": "",
             "orderable": false,
-            "className": "comments edit",
             "createdCell": function( cell, cellData, rowData, rowIndex, colIndex ) {       
               var cell_id = 'comments_' + rowData.id;
               $(cell).attr('id', cell_id ).attr('contenteditable', "true" );
@@ -106,7 +104,7 @@
             "data": "values.tags",
             "defaultContent": "",
             "orderable": false,
-            "className": "tags edit",
+            "className": "tags",
             "createdCell": function( cell, cellData, rowData, rowIndex, colIndex ) {       
               var cell_id = 'tags_' + rowData.id;
               $(cell).attr('id', cell_id ).attr('contenteditable', "true" );
@@ -129,14 +127,3 @@
             "orderable": false,
         },
     ];
-
-    OSC.editable = {
-        "tags": {
-            "path": "data/mock_data.sqlite",
-            "table":"people_editable",
-        },
-        "comments": {
-            "path": "data/mock_data.sqlite",
-            "table":"people_editable",
-        },
-    };

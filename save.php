@@ -1,5 +1,9 @@
 <?php 
 
+// configure editable columns
+$editable = array();
+include('editable.php');
+
 if ( !isset($_POST["data"])) {
 	$response['error'] = TRUE;
 	$response['message'] = "Data required.";
@@ -11,12 +15,12 @@ if ( !isset($_POST["data"])) {
 	// Get the data
 	$data = json_decode($_POST["data"]);
 	
-	$path = $data[3];
+	$path = $editable[$data[0]]["path"];
+	$table = $editable[$data[0]]["table"];
+	$column = $editable[$data[0]]["column"];
+	
 	$db = new PDO('sqlite:' . $path);
 	$db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
-
-	$column_safe = $db->quote($data[0]);
-	$table_safe = $db->quote($data[4]);
 
     $id = $data[1];
     $content= $data[2];
@@ -31,17 +35,17 @@ if ( !isset($_POST["data"])) {
 	// Update the database.
       
 	// ...create a new row, or update existing one
-	$sql_exists = $db->prepare("SELECT id FROM {$table_safe} WHERE id = :id");
+	$sql_exists = $db->prepare("SELECT id FROM {$table} WHERE id = :id");
 	$sql_exists->execute(array('id' => $id));
 	$sql_exists->rowCount() ? true : false;
 	$exists = $sql_exists->fetch(PDO::FETCH_ASSOC);
 
 	if ($exists){
-	$sql_update = $db->prepare("UPDATE {$table_safe} SET {$column_safe} = :content WHERE id = :id");
+	$sql_update = $db->prepare("UPDATE {$table} SET {$column} = :content WHERE id = :id");
 	$update = $sql_update->execute(array(':id' => $id, ':content' => $content));
 
 	} else {
-	$sql_insert = $db->prepare("INSERT INTO {$table_safe} (id, {$column_safe}) VALUES (:id, :content)");
+	$sql_insert = $db->prepare("INSERT INTO {$table} (id, {$column}) VALUES (:id, :content)");
 	$update = $sql_insert->execute(array(':id' => $id, ':content' => $content));
 	}
       

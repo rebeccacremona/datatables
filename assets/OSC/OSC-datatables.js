@@ -315,8 +315,6 @@ $(document).ready(function() {
         var id = this.id;
         var d = id.split('_');
         d.push($(this).html());
-        d.push(OSC.editable[d[0]].path);
-        d.push(OSC.editable[d[0]].table);
 
         // Format for POSTing to the save.php file
         var to_save = {'data': JSON.stringify(d)};
