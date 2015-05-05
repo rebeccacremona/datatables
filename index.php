@@ -58,13 +58,16 @@
           </div>
         </div>
 
-    	<div id="table_container" class="container">
+    	
+      <div class="loading">...loading...</div>
+      
+      <div id="table_container" class="container">
       </div> 
 
   	</div>
 
 
-    
+    <?php include('include_in_foot.html') ?>
     
   </body>
 </html>

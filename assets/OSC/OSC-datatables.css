@@ -312,4 +312,7 @@
 	  cursor: pointer;
 	}
 
-
+/*Loading Spinner*/
+div.loading {
+   text-align: center;
+}

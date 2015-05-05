@@ -1,5 +1,4 @@
-$(document).ready(function() {
-    
+$(document).ready(function() {   
 // 
 // Inserts a placeholder table into the page's #table_container element
 // 
@@ -345,6 +344,8 @@ $(document).ready(function() {
         $(this).html(OSC.reverse_parse_tags($(this).html()));
     } );
 
+// Hide the loading indicator
+  $("div.loading").hide();
 
 } )
 
