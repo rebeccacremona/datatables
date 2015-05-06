@@ -1,8 +1,6 @@
 <?php 
 
-// configure editable columns
-$editable = array();
-include('editable.php');
+include('../config.php');
 
 if ( !isset($_POST["data"])) {
 	$response['error'] = TRUE;
@@ -15,9 +13,11 @@ if ( !isset($_POST["data"])) {
 	// Get the data
 	$data = json_decode($_POST["data"]);
 	
-	$path = $editable[$data[0]]["path"];
+	$path = "../" . $editable[$data[0]]["path"];
 	$table = $editable[$data[0]]["table"];
 	$column = $editable[$data[0]]["column"];
+	$id_column = $editable[$data[0]]["id"];
+	
 	$id = $data[1];
     $content= $data[2];
 	
@@ -34,16 +34,16 @@ if ( !isset($_POST["data"])) {
 	// Update the database.
       
 	// ...create a new row, or update existing one
-	$sql_exists = $db->prepare("SELECT id FROM {$table} WHERE id = :id");
+	$sql_exists = $db->prepare("SELECT {$id_column} FROM {$table} WHERE {$id_column} = :id");
 	$sql_exists->execute(array('id' => $id));
 	$exists = $sql_exists->fetch(PDO::FETCH_ASSOC);
 
 	if ($exists){
-	$sql_update = $db->prepare("UPDATE {$table} SET {$column} = :content WHERE id = :id");
+	$sql_update = $db->prepare("UPDATE {$table} SET {$column} = :content WHERE {$id_column} = :id");
 	$update = $sql_update->execute(array(':id' => $id, ':content' => $content));
 
 	} else {
-	$sql_insert = $db->prepare("INSERT INTO {$table} (id, {$column}) VALUES (:id, :content)");
+	$sql_insert = $db->prepare("INSERT INTO {$table} ({$id_column}, {$column}) VALUES (:id, :content)");
 	$update = $sql_insert->execute(array(':id' => $id, ':content' => $content));
 	}
       

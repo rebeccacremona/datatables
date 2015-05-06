@@ -9,7 +9,6 @@
     <title>OSC DataTables Template</title>
 
     <?php include('include_in_head.html') ?>
-
    
   </head>
   
@@ -25,7 +24,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#"><img height="40" alt="Harvard DASH" src="dash_logo.gif"></a>
+          <a class="navbar-brand" href="#"><img height="40" alt="Harvard DASH" src="img/dash_logo.gif"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->

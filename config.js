@@ -2,7 +2,7 @@
 // OSC Datatables Config
 // 
     
-    // OSC.data is configured in data.php, and loaded in the document head
+    // OSC.data is configured in config.php
 
     OSC.table_id = "template_table";
     OSC.table_name = "The Table";  
@@ -33,7 +33,7 @@
     // ... To make editable: 
     // ... ... for tag functionality, className must include "tags".
     // ... ... the id created in cellcallback must be formatted 'fieldname_' + rowData.id
-    // ... ... supply the db path, table name, and column name in editable.php
+    // ... ... supply the db path, table name, and column name in config.php
     // ... If you care, configure what'll happen at small screen sizes.
     // ... ... https://datatables.net/extensions/responsive/classes
     // ... Hidden columns don't work with the Responsive plugin. Instead,

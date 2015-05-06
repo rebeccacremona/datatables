@@ -138,7 +138,7 @@ $(document).ready(function() {
 
 // ELEMENT: Add an export button
      
-      $("div.export-table").html('<form id="tsv_export_form" action ="file.tsv" method="get"><div id="export-table-description" aria-labels="export_tsv">Export:</div>' +
+      $("div.export-table").html('<form id="tsv_export_form" action ="tmp/export.tsv" method="get"><div id="export-table-description" aria-labels="export_tsv">Export:</div>' +
         '<button id="export_tsv" type="submit" class="btn btn-primary">TSV</button></form>');
 
     
@@ -320,7 +320,7 @@ $(document).ready(function() {
 
         // POST!
          var request = $.ajax({
-            url: "save.php",
+            url: "inc/save.php",
             type: "POST",
             data: to_save,  
             success: function(response){
@@ -435,8 +435,8 @@ OSC.dt.export_tsv = function(table){
 
   
   // POST!
-  $.ajax({
-    url: "tsv_export.php",
+  request = $.ajax({
+    url: "inc/tsv_export.php",
     type: "POST",
     data: to_export,  
     success: function(data){
@@ -444,6 +444,10 @@ OSC.dt.export_tsv = function(table){
       // On success, trigger the submission of the download form
       $("#tsv_export_form").submit();
     }
+  });
+
+  request.fail(function( jqXHR, textStatus ) {
+      alert( "Request failed: " + textStatus );
   });
 }
 
