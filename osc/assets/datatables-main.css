@@ -40,7 +40,7 @@
 	    background-color: lightgray;
 	 }
 
-	div#table_container tfoot th {
+	div#table_container tfoot td {
 	    padding-left: 0px;
 	    padding-right: 0px;
 	    font-weight: normal;

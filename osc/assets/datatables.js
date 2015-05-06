@@ -4,7 +4,7 @@ $(document).ready(function() {
 // 
     // Prep column filters
     if (OSC.filters !="none"){ 
-      var t_footer = '<tfoot><tr>' + Array(OSC.table_columns.length+1).join( '<th><input type="text" aria-label="Table column filter: enter column-specific search text" placeholder="(all)" class="filter_box" /></th>') +'</tr></tfoot>';
+      var t_footer = '<tfoot><tr>' + Array(OSC.table_columns.length+1).join( '<td><form><input type="text" aria-label="Table column filter: enter column-specific search text" placeholder="(all)" class="filter_box" /></form></td>') +'</tr></tfoot>';
     } else {
       var t_footer = "";
     }
@@ -219,10 +219,16 @@ $(document).ready(function() {
 
     }
 
+// FEATURE: Make the column filters work when you hit return
+  $("tfoot form").submit(function(event){  
+          event.preventDefault();
+          $("input", this).blur();
+  });
+
 // ELEMENT: Button to reset all the column filters at once
 
   $("#reset_filters").click(function(){
-    event.preventDefault()
+    event.preventDefault();
     
     // blank the filter inputs, and remove any "invalid" flags
     $("#table_container tfoot input").val("");
