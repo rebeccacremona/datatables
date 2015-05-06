@@ -1,7 +1,7 @@
 id	"last name"	"first name"	email	"oa faculty"	aa	comments	tags	special
 1	Ward	Patrick	pward0@princeton.edu	false	true	"&nbsp;Maecenas ut massa quis augue luctus tincidunt. Nulla mollis molestie lorem. Quisque ut erat."	"<span>me</span> <span>tag</span> <span>you</span>"	(unknown)
 2	Lawrence	Patrick	plawrence1@imdb.com	true	true		"<span>other</span> <span>that</span> <span>this</span>"	(unknown)
-3	(unknown)	(unknown)	(unknown)	(unknown)	true	broken?<br>	<span>fixed?</span>	(unknown)
+3	(unknown)	(unknown)	(unknown)	(unknown)	true	"still works?<br>"	<span>fixed?</span>	(unknown)
 4	Wallace	Brian	bwallace3@apple.com	true	true	"Mauris enim leo, rhoncus sed, vestibulum sit amet, cursus id, turpis. Integer aliquet, massa id lobortis convallis, tortor risus dapibus augue, vel accumsan tellus nisi eu orci. Mauris lacinia sapien quis libero."	<span>me</span>	(unknown)
 5	Knight	Jane	jknight4@redcross.org	false	true	&lt;script&gt;alert();&lt;/script&gt;	"<span>ac nulla sed vel enim</span>"	(unknown)
 6	Lewis	Jerry	jlewis5@jiathis.com	true	true	"Aenean fermentum. Donec ut mauris eget massa tempor convallis. Nulla neque libero, convallis eget, eleifend luctus, ultricies eu, nibh.<br><br>Quisque id justo sit amet sapien dignissim vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Nulla dapibus dolor vel est. Donec odio justo, sollicitudin ut, suscipit a, feugiat et, eros."		(unknown)

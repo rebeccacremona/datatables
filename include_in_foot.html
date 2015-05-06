@@ -24,10 +24,10 @@
 
 <!-- OSC Common Code -->
     <script> var OSC={} </script>
-    <script src="osc/OSC-utilities.js"></script>
-    <script src="osc/OSC-bool-to-regex.js"></script>
-    <script src="osc/OSC-datatables.js"></script>
+    <script src="osc/assets/utilities.js"></script>
+    <script src="osc/assets/bool-to-regex.js"></script>
+    <script src="osc/assets/datatables.js"></script>
+    <script> OSC.data = <?php require("osc/services/datatables-data.php") ?> </script>
 
 <!-- App-Specific Code -->
     <script src="config.js"></script>
-    <script> OSC.data = <?php require("inc/data.php") ?> </script>

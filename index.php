@@ -45,8 +45,6 @@
       </div><!-- /.container-fluid -->
     </nav>
 
-
-
     <div id="content" tabindex="-1">
 
         <div class="jumbotron">
@@ -56,7 +54,6 @@
             <p id="reset"><a class="btn btn-primary btn-lg" href="#" role="button">Do Nothing!</a></p>
           </div>
         </div>
-
     	
       <div class="loading">...loading...</div>
       
@@ -65,9 +62,7 @@
 
   	</div>
 
-
     <?php include('include_in_foot.html') ?>
     
   </body>
 </html>
-

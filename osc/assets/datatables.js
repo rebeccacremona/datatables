@@ -33,7 +33,7 @@ $(document).ready(function() {
     
     if (OSC.table_controls=="top"){
       // Technique from http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
-      OSC.load_css("assets/OSC/OSC-datatables-top.css");
+      OSC.load_css("osc/assets/datatables-top-controls.css");
 
       var row_mode_and_pagination = '<"table-mode"><""p>';
       var row_filter_switch = '<"filter-format">';
@@ -320,7 +320,7 @@ $(document).ready(function() {
 
         // POST!
          var request = $.ajax({
-            url: "inc/save.php",
+            url: "osc/services/datatables-save.php",
             type: "POST",
             data: to_save,  
             success: function(response){
@@ -436,7 +436,7 @@ OSC.dt.export_tsv = function(table){
   
   // POST!
   request = $.ajax({
-    url: "inc/tsv_export.php",
+    url: "osc/services/datatables-tsv-export.php",
     type: "POST",
     data: to_export,  
     success: function(data){
