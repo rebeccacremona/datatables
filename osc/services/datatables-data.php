@@ -1,7 +1,7 @@
 <?php
 
 include('drupal-auth.php');
-include('config.php');
+include('../../config.php');
 
 // 
 // MAIN
