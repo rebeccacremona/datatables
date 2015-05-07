@@ -146,8 +146,7 @@ $(document).ready(function() {
      
       $("div.export-table").html('<form id="tsv_export_form" action ="tmp/export.tsv" method="get"><div id="export-table-description" aria-labels="export_tsv">Export:</div>' +
         '<button id="export_tsv" type="submit" class="btn btn-primary">TSV</button></form>');
-
-    
+   
 // FEATURE: Load table in correct mode
     
     if (!OSC.advanced_mode) {
@@ -296,13 +295,11 @@ $(document).ready(function() {
       history.pushState(null, "", q_string);
   } );
 
-
 // FEATURE: Search and filter from URL
   OSC.dt.load_from_URL(table);
   window.onpopstate = function(event) {
     OSC.dt.load_from_URL(table);
   };
-
 
 // FEATURE: Export to TSV
 
@@ -316,37 +313,49 @@ $(document).ready(function() {
 
   });
 
-
 // FEATURE: Make specified content editable
   // Event assigned this way since tds are created/destroyed when paged, filtered, etc.
   // https://www.datatables.net/examples/advanced_init/events_live.html
-  // (but... this might be causing the accessibility problem with tabs and editable fields)
   $('#table_container tbody').on('blur', 'td[contenteditable=true]', function () {
         var id = this.id;
         var d = id.split('_');
-        d.push($(this).html());
+        var content = $(this).html()
+        d.push(content);
 
-        // Format for POSTing to the save.php file
-        var to_save = {'data': JSON.stringify(d)};
+        // check if content has changed...
+        var changed = (table.row("#row_" + d[1]).data().values[d[0]] != content);
+        
+        if (changed){
+          
+          // Format for POSTing to the save.php file
+          var to_save = {'data': JSON.stringify(d)};
 
-        // POST!
-         var request = $.ajax({
-            url: "osc/services/datatables-save.php",
-            type: "POST",
-            data: to_save,  
-            success: function(response){
-              var r = $.parseJSON(response);
-              if (r.error == true){
-                console.error(r.message);
-              } else {         
-                table.cell("#" + id).data(d[2]);
+          // POST!
+           var request = $.ajax({
+              url: "osc/services/datatables-save.php",
+              type: "POST",
+              data: to_save,  
+              success: function(response){
+                var r = $.parseJSON(response);
+                if (r.error == true){
+                  console.error(r.message);
+                } else {         
+                  table.cell("#" + id).data(d[2]);
+                }
               }
-            }
-          });
+            });
 
-         request.fail(function( jqXHR, textStatus ) {
-            alert( "Request failed: " + textStatus );
-         });
+           request.fail(function( jqXHR, textStatus ) {
+              alert( "Request failed: " + textStatus );
+           });
+       
+       } else {
+
+        // re-render the cell, so that it displays exactly
+        // ... how it did, before contenteditable was triggered
+        $(this).html(table.cell("#" + id).render('display'));
+
+       }
 
     } );
 
