@@ -8,7 +8,8 @@
 
     <title>OSC DataTables Template</title>
 
-    <?php include('include_in_head.html') ?>
+    <?php include('osc/services/drupal-auth.php'); ?>
+    <?php include('include_in_head.html'); ?>
    
   </head>
   
