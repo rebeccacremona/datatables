@@ -55,6 +55,10 @@
 	     border: solid 1px red;
 	 }
 
+	 div#table_container table input.last_filter {
+	     width: calc(100% - 30px);
+	 }
+
 /* Reset all filters link */
 	div#table_container div.filter_wrapper {
 		position: relative;

@@ -20,6 +20,12 @@ $(document).ready(function() {
     // Insert
     $('#table_container').html(t_html);
 
+    // UX/A11y helper: add class to last column filter, and a filter button afterwards
+    var button = '<button id="filter_all" type="button"  aria-label="Filter the table">' +
+      '<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>' +
+      '</button>';
+    $('tfoot input').last().addClass("last_filter").after(button); 
+
 
 // Define which table control elements DataTables will draw
 // ... and the surrounding div structure.
@@ -180,50 +186,49 @@ $(document).ready(function() {
       // For each column:
       table.columns().eq( 0 ).each( function ( colIdx ) {
         
-        // When the filter input changes (on blur)
-        $( 'input', table.column( colIdx ).footer() ).on( 'blur', function () {
-            
-          // Determine if boolean or regex search
-          var type = ( $(".filter-format input[type='radio']:checked").val() );
+        // When a filter form is submitted
+        $( 'form', table.column( colIdx ).footer() ).on( 'submit', function () {
           
-          if (type == "bool"){
-            var query = OSC.bool_to_regex(this.value);
-          } else {
-            var query = this.value;
-          }
+          event.preventDefault();
 
-          // Deal with incomplete or invalid regex
-          try {
-            var regex = new RegExp(query);  
-  
-            // If it's a valid regex... 
-            $(this).removeClass("invalid");
-              // ...filter...
-              table
-                .column( colIdx )
-                .search( query, true, false )
-                .draw();
+          // Determine if boolean or regex search          
+          var input = $("input", this).first();
+
+          // Apply the filter
+          var filter = OSC.dt.apply_filter(table, colIdx, input);
+            
+          // If it worked...
+          if (filter) {
+            table.draw();
               
-              // ...then push to browser history.
-              var q_string = OSC.dt.prep_url(table);
-              history.pushState(null, "", q_string);
-             
-          }
-          catch (err) {
-            // ...but if it's invalid, add a css class that makes the field red instead.
-            $(this).addClass("invalid");
-          }
+            // ...then push to browser history.
+            var q_string = OSC.dt.prep_url(table);
+            history.pushState(null, "", q_string);
 
+            // ... and set the keyboard focus back on the input element
+            input.focus();          
+          }
+        
         } );
+      
       } );
 
     }
 
-// FEATURE: Make the column filters work when you hit return
-  $("tfoot form").submit(function(event){  
-          event.preventDefault();
-          $("input", this).blur();
-  });
+// FEATURE: Run the column filters when the filter button is clicked 
+ $("button#filter_all").click(function(){
+    
+    $("#table_container tfoot input").each(function(index){
+       OSC.dt.apply_filter(table, index, $(this).first());
+     });
+    
+  table.draw();
+              
+  // ...then push to browser history.
+  var q_string = OSC.dt.prep_url(table);
+  history.pushState(null, "", q_string);  
+
+ });
 
 // ELEMENT: Button to reset all the column filters at once
 
@@ -400,6 +405,33 @@ OSC.dt.update_caption = function(info){
        
 }
 
+OSC.dt.apply_filter = function(table, colIdx, input){
+  var type = ( $(".filter-format input[type='radio']:checked").val() );
+  
+  if (type == "bool"){
+    var query = OSC.bool_to_regex(input.val());
+  } else {
+    var query = input.val();
+  }
+
+  // Deal with incomplete or invalid regex
+  try {
+    var regex = new RegExp(query);  
+
+    // If it's a valid regex... 
+    $(this).removeClass("invalid");
+      // ...filter...
+      table.column( colIdx ).search( query, true, false );
+      return true;
+      
+  } catch (err) {
+    // ...but if it's invalid, add a css class that makes the field red instead.
+    $(input).addClass("invalid");
+    return false;
+  }
+
+}
+
 
 OSC.dt.export_tsv = function(table){
 
@@ -516,7 +548,7 @@ OSC.dt.load_from_URL = function(table){
             var col_name = param;
             var column = table.column( col_name + ":name" ); 
             // make the text display in the input element   
-            $( column.footer() ).children().first().val(decodeURIComponent(f_and_s[col_name]));
+            $( column.footer() ).find("input").first().val(decodeURIComponent(f_and_s[col_name]));
             // apply the column search (but don't redraw the table)
             column.search( decodeURIComponent(f_and_s[col_name]), true, false );
           }          
