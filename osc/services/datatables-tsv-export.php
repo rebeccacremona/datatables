@@ -1,4 +1,7 @@
 <?php 
+
+include('drupal-auth.php');
+
 $rows = json_decode($_POST["rows"]);
 
 $file = fopen('../../tmp/export.tsv', 'w');
