@@ -1,7 +1,7 @@
 <?php 
 
 include('drupal-auth.php');
-include('../../config.php');
+include(getcwd() . '../../config.php');
 
 if ( !isset($_POST["data"])) {
 	$response['error'] = TRUE;
