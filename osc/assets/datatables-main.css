@@ -238,7 +238,7 @@
 	}
 
 /*The Tags*/
-	div#table_container td.tags span {
+	div#table_container tbody td.tags span {
 		background-color: grey;
 		color: #FFF;
 		border-radius: 8px;
@@ -250,26 +250,9 @@
 	}	
 
 /*Boolean Search Instructions*/
-	div#instructions {
-     visibility: hidden;
-     position: fixed;
-     left: 0px;
-     top: 0px;
-     width:100%;
-     height:100%;
-     z-index: 1000;
-     background-color: rgba(0, 0, 0, 0.5);
-    }
 
-    div#instructions div {
-     width:500px;
-     margin: 100px auto;
-     background-color: #fff;
-     border-left:1px solid #000;
-     border-bottom:1px solid #000;
-     padding-left:15px;
-     padding-bottom:15px;
-     font-size: 1em;
+	div#instructions {
+		font-size: 1.4em;
 	}
 
 	div#instructions h2{
@@ -278,28 +261,6 @@
 
 	div#instructions li.not-allowed {
 		text-decoration: line-through; color: red;
-	}
-
-	div#instructions p.close {
-		text-align: center;
-		margin-top: 35px;
-	}
-
-	div#instructions span.close {
-		display: block;
-		text-align: right;
-		font-family: sans-serif;
-		font-weight: bold;
-		font-size: 2em;
-		
-	}
-
-	div#instructions span.close a {
-		display: inline-block;
-		padding: 5px;
-		border: 1px solid black;
-		text-decoration: none;
-		color: black;
 	}
 
 	div#instructions ol > li {

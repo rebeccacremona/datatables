@@ -37,7 +37,7 @@
             <li><a href="#">Elsewhere</a></li>
           </ul>
           <form id="global_search_form" class="navbar-form navbar-right" role="search">
-            <p class="help navbar-text navbar-right" tabindex="-1" onclick="OSC.dt.overlay()">?</p>
+            <p class="help navbar-text navbar-right" tabindex="0" data-toggle="modal" data-target="#instructions">?</p>
             <div class="form-group">
               <label for="global_search" class="sr-only">Search Table</label>
               <input type="text" id="global_search" class="form-control" placeholder="Search">

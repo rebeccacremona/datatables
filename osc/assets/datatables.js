@@ -593,10 +593,14 @@ OSC.dt.load_from_URL = function(table){
 OSC.dt.add_instructions = function(){
   // Add instructions on how to format your queries
     var instructions = 
-    '<div id="instructions"><div>' +      
-        '<span class="close"><a href="#" onclick="OSC.dt.overlay()">x</a></span>' +
-        '<h2> How to Search </h2>' +
-        '<ol>' +
+    '<div id="instructions" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">' +      
+        '<div class="modal-dialog modal-lg">' +
+        '<div class="modal-content">' +
+          '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+            '<h2 class="modal-title" id="ModalLabel"> How to Search </h2>' +
+          '</div>' +
+        '<div class="modal-body"><ol>' +
           '<li>' +
            '<p>' +
             'Please wrap each search term in double quotes, and capitalize operators.' +
@@ -633,17 +637,13 @@ OSC.dt.add_instructions = function(){
               '<li>("eggs") OR ("biscuits" AND "gravy")</li>' +
             '</ul>' +
           '</li>' +
-        '</ol>' +
-        '<p class="close"><a href="#" onclick="OSC.dt.overlay()">Click here to close</a></p>' +
-      '</div></div>';
+        '</ol></div>' +
+        '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+        '</div>' +
+      '</div></div></div>';
 
     $('body').append(instructions);
-}
-
-// show/hide the instructions
-OSC.dt.overlay = function() {
-  el = document.getElementById("instructions");
-  el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 }
 
 OSC.dt.prep_url = function(table){
