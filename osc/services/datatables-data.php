@@ -1,5 +1,6 @@
 <?php
 
+include('drupal-auth.php');
 include('config.php');
 
 // 
