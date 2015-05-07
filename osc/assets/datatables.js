@@ -20,12 +20,6 @@ $(document).ready(function() {
     // Insert
     $('#table_container').html(t_html);
 
-    // UX/A11y helper: add class to last column filter, and a filter button afterwards
-    var button = '<button id="filter_all" type="button"  aria-label="Filter the table">' +
-      '<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>' +
-      '</button>';
-    $('tfoot input').last().addClass("last_filter").after(button); 
-
 
 // Define which table control elements DataTables will draw
 // ... and the surrounding div structure.
@@ -218,8 +212,8 @@ $(document).ready(function() {
 
     }
 
-// FEATURE: Run the column filters when the filter button is clicked 
- $("button#filter_all").click(function(){
+ // FEATURE: Run the column filters when the filter button is clicked 
+ $('#table_container tfoot').on('click', 'button.filter_all', function () {
     
     $("#table_container tfoot input").each(function(index){
        OSC.dt.apply_filter(table, index, $(this).first());
@@ -287,9 +281,9 @@ $(document).ready(function() {
     }); 
 
 // FEATURE: On "page" event, set the keyboard focus to the caption
-$('#'+ OSC.table_id).on( 'page.dt', function () {
-    OSC.focus = $(this).find("caption").first();
-} );
+  $('#'+ OSC.table_id).on( 'page.dt', function () {
+      OSC.focus = $(this).find("caption").first();
+  } );
 
 
 
@@ -378,6 +372,16 @@ $('#'+ OSC.table_id).on( 'page.dt', function () {
 
 // Hide the loading indicator
   $("div.loading").hide();
+
+
+// FEATURE: UX/A11y helper: add class to last column filter, and a filter button after it 
+// Doing it here, so that it happens AFTER "Responsive" redraws the table. No event handler assigned.
+  OSC.dt.label_last_filter();
+
+  // Reapply label when "Responsive" hides/shows a column 
+  $('#'+OSC.table_id).on( 'column-visibility.dt', function ( e, settings, column, state ) {
+      OSC.dt.label_last_filter();
+  } );
 
 } )
 
@@ -718,6 +722,15 @@ OSC.dt.prep_url = function(table){
 
 }
 
+// UX/A11y helper: add class to last column filter, and a filter button afterwards
+OSC.dt.label_last_filter = function(){
+    $('tfoot input').removeClass("last_filter").next('button.filter_all').remove();
+    var button = '<button class="filter_all" type="button"  aria-label="Filter the table">' +
+      '<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>' +
+      '</button>';
+    $('tfoot input').last().addClass("last_filter").after(button); 
+}
+
 // The DataTables plugin that allows us to restore sorts to their default
 // https://www.datatables.net/plug-ins/api/order.neutral%28%29
 $.fn.dataTable.Api.register( 'order.neutral()', function () {
@@ -733,7 +746,6 @@ $.fn.dataTable.Api.register( 'order.neutral()', function () {
 } );
 
 // Accessibility ToDo:
-// Add a callback on redraw, that sets the keyboard focus.... somewhere sensible.
 // Child row buttons are not accessible.
 // The aria live wrapper element needs to be present on page load, I think.
 // Add aria tags that annouce when the sorting has changed.
