@@ -12,7 +12,7 @@ $(document).ready(function() {
     // Prep basic table html
     var t_html = '<h2>'+OSC.table_name+'</h2><div class="filter_wrapper">'+
     '<table id="'+OSC.table_id+'" class="table table-striped table-hover table-bordered" width="100%">' +
-        '<caption></caption>'+ 
+        '<caption tabIndex="-1"></caption>'+ 
         "<thead></thead>" +
         t_footer +       
     '</table><a id="reset_filters" href="#">reset filters</a>';
@@ -71,7 +71,7 @@ $(document).ready(function() {
 // 
 // Make the table a datatable
 // ... relies on config specified in the "OSC" array
-// ... which is set in this-app.js and/or above
+// ... which is set in config.js, config.php and/or above
 // 
    
     var table = $('#'+OSC.table_id).DataTable( {
@@ -100,6 +100,10 @@ $(document).ready(function() {
         "drawCallback": function( settings ) {
           var info = this.api().page.info();
           OSC.dt.update_caption(info);
+          if(OSC.focus){
+            OSC.focus.focus();
+            delete OSC.focus;
+          }
         },
         
     } )  
@@ -269,7 +273,8 @@ $(document).ready(function() {
         var query = OSC.bool_to_regex(input);
         table.search( query, true, false );
         
-        // Blank the search box, reset filters, draw the table
+        // Blank the search box, reset filters, prep keyboard focus, and draw the table
+        OSC.focus = $("#" + OSC.table_id + " caption").first();
         input_element.val("");
         $("#table_container tfoot input").val("");
         table.columns().search( '' ).draw();
@@ -280,6 +285,13 @@ $(document).ready(function() {
               
         
     }); 
+
+// FEATURE: On "page" event, set the keyboard focus to the caption
+$('#'+ OSC.table_id).on( 'page.dt', function () {
+    OSC.focus = $(this).find("caption").first();
+} );
+
+
 
 // FEATURE: Capture sort order
 
