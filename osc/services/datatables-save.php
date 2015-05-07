@@ -1,7 +1,7 @@
 <?php 
 
 include('drupal-auth.php');
-include(getcwd() . '../../config.php');
+include('../../config.php');
 
 if ( !isset($_POST["data"])) {
 	$response['error'] = TRUE;
@@ -14,13 +14,13 @@ if ( !isset($_POST["data"])) {
 	// Get the data
 	$data = json_decode($_POST["data"]);
 	
-	$path = "../../" . $editable[$data[0]]["path"];
+	$path = getcwd() . "/../../" . $editable[$data[0]]["path"];
 	$table = $editable[$data[0]]["table"];
 	$column = $editable[$data[0]]["column"];
 	$id_column = $editable[$data[0]]["id"];
 	
-	$id = $data[1];
-    $content= $data[2];
+	$id      = $data[1];
+        $content = $data[2];
 	
 	$db = new PDO('sqlite:' . $path);
 	$db->setAttribute( PDO::ATTR_ERRMODE, PDO::ERRMODE_WARNING );
