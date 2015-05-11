@@ -273,11 +273,17 @@
 	  margin-left: 10px;
 	  margin-right: -10px;
 	  font-size: 1.5em;
-	  /*color: #337ab7!important;*/
 	  cursor: pointer;
 	}
 
 /*Loading Spinner*/
 div.loading {
    text-align: center;
+}
+
+/* Child row "buttons" */
+div#table_container button.btn-link {
+   padding: 0px;
+   border-top: 0px;
+   color: black;
 }

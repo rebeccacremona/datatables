@@ -48,6 +48,12 @@
             "data": "id", 
             "defaultContent": "(unknown)",
             "orderable": true,
+            "render": {
+                "display": function(data, type, row, meta){
+                    // UX/A11y helper: this column toggles children rows. Make it real buttons, instead of just css buttons
+                    return '<button type="button" class="child-control btn-link">' + data + '</button>';            
+                }
+            }
         },
         { 
             "title": "Last Name",
