@@ -37,10 +37,9 @@
             <li><a href="#">Elsewhere</a></li>
           </ul>
           <form id="global_search_form" class="navbar-form navbar-right" role="search">
-            <p class="help navbar-text navbar-right" tabindex="0" data-toggle="modal" data-target="#instructions">?</p>
+            <p class="help navbar-text navbar-right" tabindex="0" data-toggle="modal" data-target="#instructions" aria-label="search help" role="button">?</p>
             <div class="form-group">
-              <label for="global_search" class="sr-only">Search Table</label>
-              <input type="text" id="global_search" class="form-control" placeholder="Search">
+              <input type="text" id="global_search" class="form-control" placeholder="Search" aria-label="Enter table search terms...">
             </div>
             <button id="global_search_submit" type="submit" class="btn btn-default">Search</button>
           </form>
@@ -66,6 +65,8 @@
   	</div>
 
     <?php include('include_in_foot.html') ?>
+
+    <footer></footer>
     
   </body>
 </html>
