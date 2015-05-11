@@ -99,6 +99,8 @@ $(document).ready(function() {
           if(OSC.focus){
             OSC.focus.focus();
             delete OSC.focus;
+          // enable/disable child row buttons
+          OSC.dt.child_btn();
           }
         }
         
