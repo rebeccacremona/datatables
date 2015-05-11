@@ -46,7 +46,7 @@ include('config.php');
 
 		// in real life, you'd want to put in a try/catch blog and log errors
 		$db = new PDO('sqlite:' . $path);
-		$sql = "SELECT ".$id_field.",".$fields_joined." FROM ".$table." GROUP BY id";
+		$sql = "SELECT ".$id_field." as id,".$fields_joined." FROM ".$table." GROUP BY id";
 
 		$prepared = $db->prepare($sql);
 		$prepared->execute();
