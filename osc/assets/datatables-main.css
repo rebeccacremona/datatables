@@ -287,3 +287,15 @@ div#table_container button.btn-link {
    border-top: 0px;
    color: black;
 }
+
+/* Fix focus outline on table pagination*/
+.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {
+  outline-color: rgb(91, 157, 217);
+  outline-style: auto;
+  outline-width: 4.44444465637207px;
+}
+
+/*footer height*/ 
+footer {
+	height: 800px;
+}

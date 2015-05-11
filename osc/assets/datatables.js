@@ -99,10 +99,12 @@ $(document).ready(function() {
           if(OSC.focus){
             OSC.focus.focus();
             delete OSC.focus;
+          }
           // enable/disable child row buttons
           OSC.dt.child_btn();
-          }
-        }
+          // fix the table paging buttons
+          OSC.dt.pagination(); 
+        },
         
     } )  
 
@@ -382,15 +384,19 @@ $(document).ready(function() {
 //  1) add class to last column filter, and a filter button after it 
 //  2) make child row toggles in first row real buttons
 //  3) make the pagination div programmatically focusable
+//  4) improve the pagination controls (should be via a plugin, but.... too hard!!)
 // Doing it here, so that it happens AFTER "Responsive" redraws the table. No event handler assigned.
   OSC.dt.label_last_filter();
   OSC.dt.child_btn();
-  $("#" + OSC.table_id + "_paginate").attr("tabindex", "-1");
+  OSC.dt.pagination();
+  
+  $("#" + OSC.table_id + "_paginate").attr("tabindex", "-1").attr("role", "navigation");
 
   // Redo when "Responsive" hides/shows a column 
   $('#'+OSC.table_id).on( 'column-visibility.dt', function ( e, settings, column, state ) {
       OSC.dt.label_last_filter();
       OSC.dt.child_btn();
+      OSC.dt.pagination();
   } );
 
 
@@ -750,6 +756,26 @@ OSC.dt.child_btn = function(){
   } else {
     $("button.child-control").prop('disabled', true);
   }
+}
+
+//  UX/a11y helper: improve the pagination controls
+OSC.dt.pagination = function(){
+  
+  var sr_most = '<span class="sr-only"> page </span>';
+  var sr_active = '<span class="sr-only"> You are currently on page </span>';
+  var sr_previous = '<span class="sr-only"> previous page';
+  var sr_next = '<span class="sr-only"> next page';
+
+  $("#" + OSC.table_id + "_paginate li").removeAttr("tabindex")
+    .not('.active, .disabled, .previous, .next').children().prepend(sr_most);
+
+  $("#" + OSC.table_id + "_paginate li.active").children().prepend(sr_active);
+  $("#" + OSC.table_id + "_paginate li.previous").children().prepend(sr_previous);
+  $("#" + OSC.table_id + "_paginate li.next").children().prepend(sr_next);
+  $("#" + OSC.table_id + "_ellipsis").attr("aria-hidden", true);
+  
+  $("#" + OSC.table_id + "_paginate a").attr("role", "button");
+  
 }
 
 // The DataTables plugin that allows us to restore sorts to their default
