@@ -381,9 +381,11 @@ $(document).ready(function() {
 // FEATURE: UX/A11y helpers: 
 //  1) add class to last column filter, and a filter button after it 
 //  2) make child row toggles in first row real buttons
+//  3) make the pagination div programmatically focusable
 // Doing it here, so that it happens AFTER "Responsive" redraws the table. No event handler assigned.
   OSC.dt.label_last_filter();
   OSC.dt.child_btn();
+  $("#" + OSC.table_id + "_paginate").attr("tabindex", "-1");
 
   // Redo when "Responsive" hides/shows a column 
   $('#'+OSC.table_id).on( 'column-visibility.dt', function ( e, settings, column, state ) {
@@ -406,6 +408,7 @@ OSC.dt = {};
 OSC.dt.update_caption = function(info){
 
     var sr_intro = '<span class="sr-only">'+ OSC.table_name +'</span>';
+    var skip_link = '<a href="#template_table_paginate" class="sr-only sr-only-focusable">Skip to table navigation</a>';
 
     OSC.filter_info = "Showing " + (info.start+1).toLocaleString() + " to " + info.end.toLocaleString() + 
     " of " + info.recordsDisplay.toLocaleString() + " records";
@@ -435,7 +438,7 @@ OSC.dt.update_caption = function(info){
     }
     var caption = $("#table_container caption");
     
-    caption.html(sr_intro + new_cap);       
+    caption.html(sr_intro + new_cap + skip_link);       
        
 }
 
