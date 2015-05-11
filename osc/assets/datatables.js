@@ -92,13 +92,15 @@ $(document).ready(function() {
 
         // 
         "drawCallback": function( settings ) {
+          // update caption
           var info = this.api().page.info();
           OSC.dt.update_caption(info);
+          // handle keyboard focus
           if(OSC.focus){
             OSC.focus.focus();
             delete OSC.focus;
           }
-        },
+        }
         
     } )  
 
@@ -374,14 +376,19 @@ $(document).ready(function() {
   $("div.loading").hide();
 
 
-// FEATURE: UX/A11y helper: add class to last column filter, and a filter button after it 
+// FEATURE: UX/A11y helpers: 
+//  1) add class to last column filter, and a filter button after it 
+//  2) make child row toggles in first row real buttons
 // Doing it here, so that it happens AFTER "Responsive" redraws the table. No event handler assigned.
   OSC.dt.label_last_filter();
+  OSC.dt.child_btn();
 
-  // Reapply label when "Responsive" hides/shows a column 
+  // Redo when "Responsive" hides/shows a column 
   $('#'+OSC.table_id).on( 'column-visibility.dt', function ( e, settings, column, state ) {
       OSC.dt.label_last_filter();
+      OSC.dt.child_btn();
   } );
+
 
 } )
 
@@ -729,6 +736,15 @@ OSC.dt.label_last_filter = function(){
       '<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>' +
       '</button>';
     $('tfoot input').last().addClass("last_filter").after(button); 
+}
+
+// UX/A11y helper: enable/disable the child row toggle buttons
+OSC.dt.child_btn = function(){
+  if($("table.dataTable").hasClass('collapsed')){
+    $("button.child-control").prop('disabled', false);
+  } else {
+    $("button.child-control").prop('disabled', true);
+  }
 }
 
 // The DataTables plugin that allows us to restore sorts to their default
