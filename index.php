@@ -53,7 +53,6 @@
           <div class="container">
             <h1>OSC DataTables with Bootstrap</h1>
             <p>A template OSC DataTable, with all the bells and whistles, embedded in a Bootstrap page. With a Jumbotron because.... because everybody needs a Jumbotron.</p>
-            <p id="reset"><a class="btn btn-primary btn-lg" href="#" role="button">Do Nothing!</a></p>
           </div>
         </div>
     	
