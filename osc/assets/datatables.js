@@ -332,6 +332,13 @@ $(document).ready(function() {
         var id = this.id;
         var d = id.split('_');
         var content = $(this).html()
+
+        // check if content is just a br
+        var blank = (content == '<br>');
+        if (blank){
+           content = "";
+        }
+
         d.push(content);
 
         // check if content has changed...
