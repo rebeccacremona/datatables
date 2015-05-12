@@ -55,6 +55,7 @@ div#table_container div.dataTables_length {
 
 div#table_container div.dataTables_length select.input-sm {
   height: 19px;
+  padding: 0px 10px;
 }
 
 div#table_container .export-table button {

@@ -190,7 +190,7 @@ $(document).ready(function() {
       table.columns().eq( 0 ).each( function ( colIdx ) {
         
         // When a filter form is submitted
-        $( 'form', table.column( colIdx ).footer() ).on( 'submit', function () {
+        $( 'form', table.column( colIdx ).footer() ).on( 'submit', function (event) {
           
           event.preventDefault();
 
@@ -235,7 +235,7 @@ $(document).ready(function() {
 
 // ELEMENT: Button to reset all the column filters at once
 
-  $("#reset_filters").click(function(){
+  $("#reset_filters").click(function(event){
     event.preventDefault();
     
     // blank the filter inputs, and remove any "invalid" flags
@@ -315,7 +315,7 @@ $(document).ready(function() {
 
 // FEATURE: Export to TSV
 
-  $("#export_tsv").click(function(){      
+  $("#export_tsv").click(function(event){      
         // Prevent the form from submitting
         event.preventDefault();
         
