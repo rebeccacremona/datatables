@@ -413,6 +413,8 @@ OSC.dt = {};
 
 OSC.dt.update_caption = function(info){
 
+    var caption = $("#table_container caption");
+
     var sr_intro = '<span class="sr-only">'+ OSC.table_name +'</span>';
     var skip_link = '<a href="#template_table_paginate" class="sr-only sr-only-focusable">Skip to table navigation</a>';
 
@@ -424,25 +426,29 @@ OSC.dt.update_caption = function(info){
       var search_info_span = "<span class='search'>Search Results for: " + OSC.search_string + "</span>";
       var new_cap = search_info_span + filter_span;
       if (OSC.table_controls=="top"){
+        caption.html(sr_intro + new_cap);
         $("a#reset_filters").css( "top",  "65px" );
         $("div.table-mode").css("top", "50px");
         $("div.dataTables_paginate").css("top", "50px");
         $("div.table-details").css("top", "65px");
       } else {
+        caption.html(sr_intro + new_cap + skip_link);
         $("a#reset_filters").css( "top",  "40px" );
       }
     } else {
       var new_cap = filter_span;
       if (OSC.table_controls=="top"){;
+        caption.html(sr_intro + new_cap);
         $("a#reset_filters").css( "top",  "45px" );
         $("div.table-mode").css("top", "32px");
         $("div.dataTables_paginate").css("top", "32px");
         $("div.table-details").css("top", "45px");
       } else {
+        caption.html(sr_intro + new_cap + skip_link);
         $("a#reset_filters").css( "top",  "23px" )
       }
     }
-    var caption = $("#table_container caption");
+    
     
     caption.html(sr_intro + new_cap + skip_link);       
        
