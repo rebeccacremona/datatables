@@ -781,7 +781,9 @@ OSC.dt.pagination = function(){
   $("#" + OSC.table_id + "_paginate li.active").children().prepend(sr_active);
   $("#" + OSC.table_id + "_paginate li.previous").children().prepend(sr_previous);
   $("#" + OSC.table_id + "_paginate li.next").children().prepend(sr_next);
-  $("#" + OSC.table_id + "_ellipsis").attr("aria-hidden", true);
+  // When you have lots of pages, and you are on page 5, there will be TWO ellipsis elements,
+  // ...both with the same id. Not valid HTML! (It should be a class) This is a workaround.
+  $("li[id='" + OSC.table_id + "_ellipsis']").attr("aria-hidden", true);
   
   $("#" + OSC.table_id + "_paginate a").attr("role", "button");
   
