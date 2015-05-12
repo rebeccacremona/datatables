@@ -10,8 +10,14 @@ $(document).ready(function() {
     }
 
     // Prep basic table html
+    if (OSC.headers_wrap){
+      var classes = "table table-striped table-hover table-bordered table-condensed wrap_headers"
+    } else {
+      var classes = "table table-striped table-hover table-bordered table-condensed nowrap_headers"
+    }
+
     var t_html = '<h2>'+OSC.table_name+'</h2><div class="filter_wrapper">'+
-    '<table id="'+OSC.table_id+'" class="table table-striped table-hover table-bordered" width="100%">' +
+    '<table id="'+OSC.table_id+'" class="' + classes + '" width="100%">' +
         '<caption tabIndex="-1"></caption>'+ 
         "<thead></thead>" +
         t_footer +       
@@ -69,7 +75,7 @@ $(document).ready(function() {
 // 
    
     var table = $('#'+OSC.table_id).DataTable( {
-        "responsive": true,
+        "responsive": OSC.responsive,
         "deferRender": true,
 
         "data": OSC.data,

@@ -26,9 +26,12 @@
 		font-size: .85em;
 	}
 
-/* Prevent column headers from wrapping */
-	div#table_container thead th { 
+/* Handle column headers wrapping */
+	div#table_container table.nowrap_headers th { 
 		white-space: nowrap; 
+	}
+	div#table_container table.wrap_headers th { 
+		white-space: normal; 
 	}
 
 /* Minimally style the filter row */

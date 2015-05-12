@@ -49,16 +49,21 @@
 
     <div id="content" tabindex="-1">
 
-        <div class="jumbotron">
+        <!-- <div class="jumbotron">
           <div class="container">
             <h1>OSC DataTables with Bootstrap</h1>
             <p>A template OSC DataTable, with all the bells and whistles, embedded in a Bootstrap page. With a Jumbotron because.... because everybody needs a Jumbotron.</p>
           </div>
-        </div>
+        </div> -->
     	
       <div class="loading">...loading...</div>
       
-      <div id="table_container" class="container">
+      <!-- 
+      For a full-width table, set class="container-fluid"
+      For a fixed width container (width determined by Bootstrap, depending on viewport size), set class="container"
+      For wide tables, container-fluid is recommended.  
+      -->
+      <div id="table_container" class="container-fluid">
       </div> 
 
   	</div>

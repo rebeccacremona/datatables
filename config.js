@@ -23,6 +23,16 @@
     // ... (undefined defaults to bottom)
     OSC.table_controls = "bottom";
 
+    // Permit column headers to wrap:
+    // ... true
+    // ... false
+    OSC.headers_wrap = false;
+
+    // Responsive?
+    // (collapses columns to toggling child rows, when you run out of room)
+    // ... true
+    // ... false
+    OSC.responsive = false;
 
     // Best practices, defining columns:
     // ... Always include a "defaultContent" attribute. (It's sort/searchable.)
