@@ -447,11 +447,7 @@ OSC.dt.update_caption = function(info){
         caption.html(sr_intro + new_cap + skip_link);
         $("a#reset_filters").css( "top",  "23px" )
       }
-    }
-    
-    
-    caption.html(sr_intro + new_cap + skip_link);       
-       
+    }         
 }
 
 OSC.dt.apply_filter = function(table, colIdx, input){
