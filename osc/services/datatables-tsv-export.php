@@ -1,7 +1,10 @@
 <?php 
+
+include('drupal-auth.php');
+
 $rows = json_decode($_POST["rows"]);
 
-$file = fopen('file.tsv', 'w');
+$file = fopen('../../tmp/export.tsv', 'w');
 
 foreach($rows as $row) {
 	fputcsv($file, $row, "\t", "\"");

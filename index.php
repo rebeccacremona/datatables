@@ -8,8 +8,10 @@
 
     <title>OSC DataTables Template</title>
 
-    <?php include('include_in_head.html') ?>
-
+    <?php 
+    include('osc/services/drupal-auth.php');
+    include('include_in_head.html'); 
+    ?>
    
   </head>
   
@@ -25,20 +27,19 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#"><img height="40" alt="Harvard DASH" src="dash_logo.gif"></a>
+          <a class="navbar-brand" href="//dash.harvard.edu"><img height="40" alt="Harvard DASH logo" src="img/dash_logo.gif"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Elsewhere</a></li>
+            <li><a href="//osc.hul.harvard.edu">About the OSC</a></li>
           </ul>
           <form id="global_search_form" class="navbar-form navbar-right" role="search">
-            <p class="help navbar-text navbar-right" tabindex="-1" onclick="OSC.dt.overlay()">?</p>
+            <p class="help navbar-text navbar-right" tabindex="0" data-toggle="modal" data-target="#instructions" aria-label="search help" role="button">?</p>
             <div class="form-group">
-              <label for="global_search" class="sr-only">Search Table</label>
-              <input type="text" id="global_search" class="form-control" placeholder="Search">
+              <input type="text" id="global_search" class="form-control" placeholder="Search" aria-label="Enter table search terms...">
             </div>
             <button id="global_search_submit" type="submit" class="btn btn-default">Search</button>
           </form>
@@ -46,26 +47,31 @@
       </div><!-- /.container-fluid -->
     </nav>
 
-
-
     <div id="content" tabindex="-1">
 
         <div class="jumbotron">
           <div class="container">
-            <h1>OSC DataTables with Bootstrap</h1>
-            <p>A template OSC DataTable, with all the bells and whistles, embedded in a Bootstrap page. With a Jumbotron because.... because everybody needs a Jumbotron.</p>
-            <p id="reset"><a class="btn btn-primary btn-lg" href="#" role="button">Do Nothing!</a></p>
+            <h1>DataTables with Bootstrap</h1>
+            <p>A sample DataTable as used by the Harvard Library Office for Scholarly Communication</p>
+            <a href="//github.com/rebeccacremona/datatables" class="btn btn-primary">Get the code</a>
           </div>
         </div>
-
-    	<div id="table_container" class="container">
+    	
+      <div class="loading">...loading...</div>
+      
+      <!-- 
+      For a full-width table, set class="container-fluid"
+      For a fixed width container (width determined by Bootstrap, depending on viewport size), set class="container"
+      For wide tables, container-fluid is recommended.  
+      -->
+      <div id="table_container" class="container">
       </div> 
 
   	</div>
 
+    <?php include('include_in_foot.html') ?>
 
-    
+    <footer></footer>
     
   </body>
 </html>
-

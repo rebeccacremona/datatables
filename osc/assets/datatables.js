@@ -1,22 +1,27 @@
-$(document).ready(function() {
-    
+$(document).ready(function() {   
 // 
 // Inserts a placeholder table into the page's #table_container element
 // 
     // Prep column filters
     if (OSC.filters !="none"){ 
-      var t_footer = '<tfoot><tr>' + Array(OSC.table_columns.length+1).join( '<th><input type="text" aria-label="Table column filter: enter column-specific search text" placeholder="(all)" class="filter_box" /></th>') +'</tr></tfoot>';
+      var t_footer = '<tfoot><tr>' + Array(OSC.table_columns.length+1).join( '<td><form><input type="text" aria-label="Table column filter: enter column-specific search text" placeholder="(all)" class="filter_box" /></form></td>') +'</tr></tfoot>';
     } else {
       var t_footer = "";
     }
 
     // Prep basic table html
+    if (OSC.headers_wrap){
+      var classes = "table table-striped table-hover table-bordered  wrap_headers"
+    } else {
+      var classes = "table table-striped table-hover table-bordered  nowrap_headers"
+    }
+
     var t_html = '<h2>'+OSC.table_name+'</h2><div class="filter_wrapper">'+
-    '<table id="'+OSC.table_id+'" class="table table-striped table-hover table-bordered" width="100%">' +
-        '<caption></caption>'+ 
+    '<table id="'+OSC.table_id+'" class="' + classes + '" width="100%">' +
+        "<caption class='sr-only'>" + OSC.table_caption + "</caption>" +
         "<thead></thead>" +
         t_footer +       
-    '</table><a id="reset_filters" href="#">reset filters</a>';
+    '</table><a role="button" id="reset_filters" href="#">reset filters</a>';
 
     // Insert
     $('#table_container').html(t_html);
@@ -34,13 +39,13 @@ $(document).ready(function() {
     
     if (OSC.table_controls=="top"){
       // Technique from http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
-      OSC.load_css("assets/OSC/OSC-datatables-top.css");
+      OSC.load_css("osc/assets/datatables-top-controls.css");
 
-      var row_mode_and_pagination = '<"table-mode"><""p>';
-      var row_filter_switch = '<"filter-format">';
-      var row_export = '<"export-table">';
-      var row_entries_length = '<l>';
-      var table_details = '<"table-details"'+ row_entries_length + row_export + row_filter_switch +'>';
+      var div_mode_and_pagination = '<"table-mode col-lg-2 col-sm-6"><"col-lg-5 col-lg-push-5 col-sm-6 col-xs-12"p>';
+      var div_filter_switch = '<"filter-format">';
+      var div_export = '<"export-table">';
+      var div_entries_length = '<""l>';
+      var table_details = '<"table-details col-lg-5 col-lg-pull-5 col-sm-12"'+ div_entries_length + div_export + div_filter_switch +'>';
     
     } else {
       var row_mode_and_pagination = '<"row"<"col-sm-6 col-xs-12 col-sm-push-6"p><"col-sm-6 col-sm-pull-6 col-xs-12 table-mode">>';
@@ -52,25 +57,26 @@ $(document).ready(function() {
     }
 
     var row_table = '<"row"<"col-sm-12"t>>';
+    var row_caption = '<"row"<"caption col-sm-12">>';
     
     
     // Allow individual apps to override
     if (!OSC.dom) {
       if (OSC.table_controls=="top"){
-        OSC.dom = '<"table-footer"'+ row_mode_and_pagination + table_details + '>' + row_table ;
+        OSC.dom = row_caption + '<"row table-footer"'+ div_mode_and_pagination + table_details + '>' + row_table ;
       } else {
-        OSC.dom = row_table + '<"table-footer"'+ row_mode_and_pagination + table_details + '>';
+        OSC.dom = row_caption + row_table + '<"table-footer"'+ row_mode_and_pagination + table_details + '>';
       }
     }
 
 // 
 // Make the table a datatable
 // ... relies on config specified in the "OSC" array
-// ... which is set in this-app.js and/or above
+// ... which is set in config.js, config.php and/or above
 // 
    
     var table = $('#'+OSC.table_id).DataTable( {
-        "responsive": true,
+        "responsive": OSC.responsive,
         "deferRender": true,
 
         "data": OSC.data,
@@ -78,6 +84,7 @@ $(document).ready(function() {
         "dom": OSC.dom,
 
         "language": {
+          "lengthMenu": "Show _MENU_",
           "paginate": {
             "previous": "&lt;",
             "next": "&gt;"
@@ -93,15 +100,25 @@ $(document).ready(function() {
 
         // 
         "drawCallback": function( settings ) {
+          // update caption
           var info = this.api().page.info();
           OSC.dt.update_caption(info);
+          // handle keyboard focus
+          if(OSC.focus){
+            OSC.focus.focus();
+            delete OSC.focus;
+          }
+          // enable/disable child row buttons
+          OSC.dt.child_btn();
+          // fix the table paging buttons
+          OSC.dt.pagination(); 
         },
         
     } )  
 
 // ELEMENT: Add the mode switch
     // Technique from https://www.paypal-engineering.com/2014/01/15/a-sweet-toggle-switch/
-    $("div.table-mode").html('<div id="table-mode-description">Mode:</div>' +
+    $("div.table-mode").attr("role", "menu").html('<div id="table-mode-description">Mode:</div>' +
     '<div id="table-mode-instructions" tabindex="0" class="sr-only sr-only-focusable clearfix">To toggle the switch, press tab again, then use your up/down arrows.</div>' +
     '<div class="switch clearfix"><input type="radio" id="table-mode-basic" name="table-mode" value="basic" class="sr-only" aria-describedby="table-mode-description" />' +
     '<label for="table-mode-basic">Basic</label>' +
@@ -139,10 +156,9 @@ $(document).ready(function() {
 
 // ELEMENT: Add an export button
      
-      $("div.export-table").html('<form id="tsv_export_form" action ="file.tsv" method="get"><div id="export-table-description" aria-labels="export_tsv">Export:</div>' +
+      $("div.export-table").html('<form id="tsv_export_form" action ="tmp/export.tsv" method="get"><div id="export-table-description" aria-labels="export_tsv">Export:</div>' +
         '<button id="export_tsv" type="submit" class="btn btn-primary">TSV</button></form>');
-
-    
+   
 // FEATURE: Load table in correct mode
     
     if (!OSC.advanced_mode) {
@@ -151,11 +167,11 @@ $(document).ready(function() {
       $("#table-mode-advanced").prop("checked", "checked");
     }
 
-// FEATURE: Disable advanced mode for xs screens, when using top buttons
+// FEATURE: Disable advanced mode for sm screens, when using top buttons
 // http://krasimirtsonev.com/blog/article/Using-media-queries-in-JavaScript-AbsurdJS-edition
 
     if(OSC.table_controls=="top"){
-      var mq = window.matchMedia('all and (max-width: 570px)');
+      var mq = window.matchMedia('all and (max-width: 758px)');
       if(mq.matches) {
           $("#table-mode-basic").prop("checked", "checked").trigger("change");
           $("div.table-mode").hide();
@@ -181,49 +197,54 @@ $(document).ready(function() {
       // For each column:
       table.columns().eq( 0 ).each( function ( colIdx ) {
         
-        // When the filter input changes (on blur)
-        $( 'input', table.column( colIdx ).footer() ).on( 'blur', function () {
-            
-          // Determine if boolean or regex search
-          var type = ( $(".filter-format input[type='radio']:checked").val() );
+        // When a filter form is submitted
+        $( 'form', table.column( colIdx ).footer() ).on( 'submit', function (event) {
           
-          if (type == "bool"){
-            var query = OSC.bool_to_regex(this.value);
-          } else {
-            var query = this.value;
-          }
+          event.preventDefault();
 
-          // Deal with incomplete or invalid regex
-          try {
-            var regex = new RegExp(query);  
-  
-            // If it's a valid regex... 
-            $(this).removeClass("invalid");
-              // ...filter...
-              table
-                .column( colIdx )
-                .search( query, true, false )
-                .draw();
+          // Determine if boolean or regex search          
+          var input = $("input", this).first();
+
+          // Apply the filter
+          var filter = OSC.dt.apply_filter(table, colIdx, input);
+            
+          // If it worked...
+          if (filter) {
+            table.draw();
               
-              // ...then push to browser history.
-              var q_string = OSC.dt.prep_url(table);
-              history.pushState(null, "", q_string);
-             
-          }
-          catch (err) {
-            // ...but if it's invalid, add a css class that makes the field red instead.
-            $(this).addClass("invalid");
-          }
+            // ...then push to browser history.
+            var q_string = OSC.dt.prep_url(table);
+            history.pushState(null, "", q_string);
 
+            // ... and set the keyboard focus back on the input element
+            input.focus();          
+          }
+        
         } );
+      
       } );
 
     }
 
+ // FEATURE: Run the column filters when the filter button is clicked 
+ $('#table_container tfoot').on('click', 'button.filter_all', function () {
+    
+    $("#table_container tfoot input").each(function(index){
+       OSC.dt.apply_filter(table, index, $(this).first());
+     });
+    
+  table.draw();
+              
+  // ...then push to browser history.
+  var q_string = OSC.dt.prep_url(table);
+  history.pushState(null, "", q_string);  
+
+ });
+
 // ELEMENT: Button to reset all the column filters at once
 
-  $("#reset_filters").click(function(){
-    event.preventDefault()
+  $("#reset_filters").click(function(event){
+    event.preventDefault();
     
     // blank the filter inputs, and remove any "invalid" flags
     $("#table_container tfoot input").val("");
@@ -260,7 +281,8 @@ $(document).ready(function() {
         var query = OSC.bool_to_regex(input);
         table.search( query, true, false );
         
-        // Blank the search box, reset filters, draw the table
+        // Blank the search box, reset filters, prep keyboard focus, and draw the table
+        OSC.focus = $("#table_container div.caption").first();
         input_element.val("");
         $("#table_container tfoot input").val("");
         table.columns().search( '' ).draw();
@@ -271,6 +293,13 @@ $(document).ready(function() {
               
         
     }); 
+
+// FEATURE: On "page" event, set the keyboard focus to the caption
+  $('#'+ OSC.table_id).on( 'page.dt', function () {
+      OSC.focus = $("#table_container div.caption").first();
+  } );
+
+
 
 // FEATURE: Capture sort order
 
@@ -286,17 +315,15 @@ $(document).ready(function() {
       history.pushState(null, "", q_string);
   } );
 
-
 // FEATURE: Search and filter from URL
   OSC.dt.load_from_URL(table);
   window.onpopstate = function(event) {
     OSC.dt.load_from_URL(table);
   };
 
-
 // FEATURE: Export to TSV
 
-  $("#export_tsv").click(function(){      
+  $("#export_tsv").click(function(event){      
         // Prevent the form from submitting
         event.preventDefault();
         
@@ -306,39 +333,56 @@ $(document).ready(function() {
 
   });
 
-
 // FEATURE: Make specified content editable
   // Event assigned this way since tds are created/destroyed when paged, filtered, etc.
   // https://www.datatables.net/examples/advanced_init/events_live.html
-  // (but... this might be causing the accessibility problem with tabs and editable fields)
   $('#table_container tbody').on('blur', 'td[contenteditable=true]', function () {
         var id = this.id;
         var d = id.split('_');
-        d.push($(this).html());
-        d.push(OSC.editable[d[0]].path);
-        d.push(OSC.editable[d[0]].table);
+        var content = $(this).html()
 
-        // Format for POSTing to the save.php file
-        var to_save = {'data': JSON.stringify(d)};
+        // check if content is just a br
+        var blank = (content == '<br>');
+        if (blank){
+           content = "";
+        }
 
-        // POST!
-         var request = $.ajax({
-            url: "save.php",
-            type: "POST",
-            data: to_save,  
-            success: function(response){
-              var r = $.parseJSON(response);
-              if (r.error == true){
-                console.error(r.message);
-              } else {         
-                table.cell("#" + id).data(d[2]);
+        d.push(content);
+
+        // check if content has changed...
+        var changed = (table.row("#row_" + d[1]).data().values[d[0]] != content);
+        
+        if (changed){
+          
+          // Format for POSTing to the save.php file
+          var to_save = {'data': JSON.stringify(d)};
+
+          // POST!
+           var request = $.ajax({
+              url: "osc/services/datatables-save.php",
+              type: "POST",
+              data: to_save,  
+              success: function(response){
+                var r = $.parseJSON(response);
+                if (r.error == true){
+                  console.error(r.message);
+                } else {         
+                  table.cell("#" + id).data(d[2]);
+                }
               }
-            }
-          });
+            });
 
-         request.fail(function( jqXHR, textStatus ) {
-            alert( "Request failed: " + textStatus );
-         });
+           request.fail(function( jqXHR, textStatus ) {
+              alert( "Request failed: " + textStatus );
+           });
+       
+       } else {
+
+        // re-render the cell, so that it displays exactly
+        // ... how it did, before contenteditable was triggered
+        $(this).html(table.cell("#" + id).render('display'));
+
+       }
 
     } );
 
@@ -346,6 +390,30 @@ $(document).ready(function() {
   $('#table_container tbody').on('focus', 'td.tags[contenteditable=true]', function () {
         $(this).html(OSC.reverse_parse_tags($(this).html()));
     } );
+
+// Hide the loading indicator
+  $("div.loading").hide();
+
+
+// FEATURE: UX/A11y helpers: 
+//  1) add class to last column filter, and a filter button after it 
+//  2) make child row toggles in first row real buttons
+//  3) make the caption and pagination divs programmatically focusable
+//  4) improve the pagination controls (should be via a plugin, but.... too hard!!)
+// Doing it here, so that it happens AFTER "Responsive" redraws the table. No event handler assigned.
+  OSC.dt.label_last_filter();
+  OSC.dt.child_btn();
+  OSC.dt.pagination();
+  
+  $("#table_container div.caption").attr("tabindex", "-1");
+  $("#" + OSC.table_id + "_paginate").attr("tabindex", "-1").attr("role", "navigation").attr("aria-label", "table pages");
+
+  // Redo when "Responsive" hides/shows a column 
+  $('#'+OSC.table_id).on( 'column-visibility.dt', function ( e, settings, column, state ) {
+      OSC.dt.label_last_filter();
+      OSC.dt.child_btn();
+      OSC.dt.pagination();
+  } );
 
 
 } )
@@ -361,7 +429,9 @@ OSC.dt = {};
 
 OSC.dt.update_caption = function(info){
 
-    var sr_intro = '<span class="sr-only">'+ OSC.table_name +'</span>';
+    var caption = $("#table_container div.caption");
+
+    var skip_link = '<a href="#template_table_paginate" class="sr-only sr-only-focusable" role="button" aria-label="Skip to table navigation">Skip to table navigation</a>';
 
     OSC.filter_info = "Showing " + (info.start+1).toLocaleString() + " to " + info.end.toLocaleString() + 
     " of " + info.recordsDisplay.toLocaleString() + " records";
@@ -371,28 +441,49 @@ OSC.dt.update_caption = function(info){
       var search_info_span = "<span class='search'>Search Results for: " + OSC.search_string + "</span>";
       var new_cap = search_info_span + filter_span;
       if (OSC.table_controls=="top"){
-        $("a#reset_filters").css( "top",  "65px" );
-        $("div.table-mode").css("top", "50px");
-        $("div.dataTables_paginate").css("top", "50px");
-        $("div.table-details").css("top", "65px");
+        caption.html(new_cap);
+        $("a#reset_filters").css( "top",  "75px" );
       } else {
+        caption.html(new_cap + skip_link);
         $("a#reset_filters").css( "top",  "40px" );
       }
     } else {
       var new_cap = filter_span;
       if (OSC.table_controls=="top"){;
-        $("a#reset_filters").css( "top",  "45px" );
-        $("div.table-mode").css("top", "32px");
-        $("div.dataTables_paginate").css("top", "32px");
-        $("div.table-details").css("top", "45px");
+        caption.html(new_cap);
+        $("a#reset_filters").css( "top",  "55px" );
       } else {
+        caption.html(new_cap + skip_link);
         $("a#reset_filters").css( "top",  "23px" )
       }
-    }
-    var caption = $("#table_container caption");
-    
-    caption.html(sr_intro + new_cap);       
-       
+    }         
+}
+
+OSC.dt.apply_filter = function(table, colIdx, input){
+  var type = ( $(".filter-format input[type='radio']:checked").val() );
+  
+  if (type == "bool"){
+    var query = OSC.bool_to_regex(input.val());
+  } else {
+    var query = input.val();
+  }
+
+  // Deal with incomplete or invalid regex
+  try {
+    var regex = new RegExp(query);  
+
+    // If it's a valid regex... 
+    $(input).removeClass("invalid");
+      // ...filter...
+      table.column( colIdx ).search( query, true, false );
+      return true;
+      
+  } catch (err) {
+    // ...but if it's invalid, add a css class that makes the field red instead.
+    $(input).addClass("invalid");
+    return false;
+  }
+
 }
 
 
@@ -436,8 +527,8 @@ OSC.dt.export_tsv = function(table){
 
   
   // POST!
-  $.ajax({
-    url: "tsv_export.php",
+  request = $.ajax({
+    url: "osc/services/datatables-tsv-export.php",
     type: "POST",
     data: to_export,  
     success: function(data){
@@ -445,6 +536,10 @@ OSC.dt.export_tsv = function(table){
       // On success, trigger the submission of the download form
       $("#tsv_export_form").submit();
     }
+  });
+
+  request.fail(function( jqXHR, textStatus ) {
+      alert( "Request failed: " + textStatus );
   });
 }
 
@@ -507,7 +602,7 @@ OSC.dt.load_from_URL = function(table){
             var col_name = param;
             var column = table.column( col_name + ":name" ); 
             // make the text display in the input element   
-            $( column.footer() ).children().first().val(decodeURIComponent(f_and_s[col_name]));
+            $( column.footer() ).find("input").first().val(decodeURIComponent(f_and_s[col_name]));
             // apply the column search (but don't redraw the table)
             column.search( decodeURIComponent(f_and_s[col_name]), true, false );
           }          
@@ -527,10 +622,14 @@ OSC.dt.load_from_URL = function(table){
 OSC.dt.add_instructions = function(){
   // Add instructions on how to format your queries
     var instructions = 
-    '<div id="instructions"><div>' +      
-        '<span class="close"><a href="#" onclick="OSC.dt.overlay()">x</a></span>' +
-        '<h2> How to Search </h2>' +
-        '<ol>' +
+    '<div id="instructions" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="ModalLabel" aria-hidden="true">' +      
+        '<div class="modal-dialog modal-lg">' +
+        '<div class="modal-content">' +
+          '<div class="modal-header">' +
+            '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>' +
+            '<h2 class="modal-title" id="ModalLabel"> How to Search </h2>' +
+          '</div>' +
+        '<div class="modal-body"><ol>' +
           '<li>' +
            '<p>' +
             'Please wrap each search term in double quotes, and capitalize operators.' +
@@ -567,17 +666,13 @@ OSC.dt.add_instructions = function(){
               '<li>("eggs") OR ("biscuits" AND "gravy")</li>' +
             '</ul>' +
           '</li>' +
-        '</ol>' +
-        '<p class="close"><a href="#" onclick="OSC.dt.overlay()">Click here to close</a></p>' +
-      '</div></div>';
+        '</ol></div>' +
+        '<div class="modal-footer">' +
+          '<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>' +
+        '</div>' +
+      '</div></div></div>';
 
     $('body').append(instructions);
-}
-
-// show/hide the instructions
-OSC.dt.overlay = function() {
-  el = document.getElementById("instructions");
-  el.style.visibility = (el.style.visibility == "visible") ? "hidden" : "visible";
 }
 
 OSC.dt.prep_url = function(table){
@@ -656,6 +751,46 @@ OSC.dt.prep_url = function(table){
 
 }
 
+// UX/A11y helper: add class to last column filter, and a filter button afterwards
+OSC.dt.label_last_filter = function(){
+    $('tfoot input').removeClass("last_filter").next('button.filter_all').remove();
+    var button = '<button class="filter_all" type="button"  aria-label="Filter the table">' +
+      '<span class="glyphicon glyphicon-filter" aria-hidden="true"></span>' +
+      '</button>';
+    $('tfoot input').last().addClass("last_filter").after(button); 
+}
+
+// UX/A11y helper: enable/disable the child row toggle buttons
+OSC.dt.child_btn = function(){
+  if($("table.dataTable").hasClass('collapsed')){
+    $("button.child-control").prop('disabled', false);
+  } else {
+    $("button.child-control").prop('disabled', true);
+  }
+}
+
+// UX/a11y helper: improve the pagination controls
+OSC.dt.pagination = function(){
+  
+  var sr_most = '<span class="sr-only"> page </span>';
+  var sr_active = '<span class="sr-only"> You are currently on page </span>';
+  var sr_previous = '<span class="sr-only"> previous page';
+  var sr_next = '<span class="sr-only"> next page';
+
+  $("#" + OSC.table_id + "_paginate li").removeAttr("tabindex")
+    .not('.active, .disabled, .previous, .next').children().prepend(sr_most);
+
+  $("#" + OSC.table_id + "_paginate li.active").children().prepend(sr_active);
+  $("#" + OSC.table_id + "_paginate li.previous").children().prepend(sr_previous);
+  $("#" + OSC.table_id + "_paginate li.next").children().prepend(sr_next);
+  // When you have lots of pages, and you are on page 5, there will be TWO ellipsis elements,
+  // ...both with the same id. Not valid HTML! (It should be a class) This is a workaround.
+  $("li[id='" + OSC.table_id + "_ellipsis']").attr("aria-hidden", true);
+  
+  $("#" + OSC.table_id + "_paginate a").attr("role", "button");
+  
+}
+
 // The DataTables plugin that allows us to restore sorts to their default
 // https://www.datatables.net/plug-ins/api/order.neutral%28%29
 $.fn.dataTable.Api.register( 'order.neutral()', function () {
@@ -671,9 +806,5 @@ $.fn.dataTable.Api.register( 'order.neutral()', function () {
 } );
 
 // Accessibility ToDo:
-// Add a callback on redraw, that sets the keyboard focus.... somewhere sensible.
-// Child row buttons are not accessible.
-// The aria live wrapper element needs to be present on page load, I think.
-// Add aria tags that annouce when the sorting has changed.
-// See if I can fix the paging interface.
-// See if I can get a plain html table to read how I want, in VoiceOver, and then see if I can replicate in DataTables
+// This still isn't being read properly......
+// See if I can get a plain html table to read how I want, in VoiceOver and ChromeVox, and then see if I can replicate in DataTables

@@ -2,16 +2,17 @@
 // OSC Datatables Config
 // 
     
-    // OSC.data is configured in data.php, and loaded in the document head
+    // OSC.data is configured in config.php
 
     OSC.table_id = "template_table";
-    OSC.table_name = "The Table";  
+    OSC.table_name = "The Table"; 
+    OSC.table_caption = "A table to demonstrate DataTables as used by the Harvard Library Office for Scholarly Communication" 
 
     // Column filters: 
     // ... basic (appears on page load), 
     // ... advanced (appears in advanced mode),
     // ... none
-    OSC.filters = "basic";
+    OSC.filters = "advanced";
 
     // Load in advanced mode:
     // ... true/false
@@ -23,6 +24,16 @@
     // ... (undefined defaults to bottom)
     OSC.table_controls = "bottom";
 
+    // Permit column headers to wrap:
+    // ... true
+    // ... false
+    OSC.headers_wrap = false;
+
+    // Responsive?
+    // (collapses columns to toggling child rows, when you run out of room)
+    // ... true
+    // ... false
+    OSC.responsive = true;
 
     // Best practices, defining columns:
     // ... Always include a "defaultContent" attribute. (It's sort/searchable.)
@@ -30,11 +41,10 @@
     // ... For performance, specify non-orderable (non-sorting) where possible.
     // ... But, if you disable sort on the first column, do sort by another column by default.
     // ... Please don't specify non-searchable in particular columns.
-    // ... To make editable:
-    // ... ... className must include "edit". 
+    // ... To make editable: 
     // ... ... for tag functionality, className must include "tags".
     // ... ... the id created in cellcallback must be formatted 'fieldname_' + rowData.id
-    // ... ... supply the db path and table name in OSC.editable[fieldname].path and OSC.editable[fieldname].table
+    // ... ... supply the db path, table name, and column name in config.php
     // ... If you care, configure what'll happen at small screen sizes.
     // ... ... https://datatables.net/extensions/responsive/classes
     // ... Hidden columns don't work with the Responsive plugin. Instead,
@@ -49,6 +59,12 @@
             "data": "id", 
             "defaultContent": "(unknown)",
             "orderable": true,
+            "render": {
+                "display": function(data, type, row, meta){
+                    // UX/A11y helper: this column toggles children rows. Make it real buttons, instead of just css buttons
+                    return '<button type="button" class="child-control btn-link">' + data + '</button>';            
+                }
+            }
         },
         { 
             "title": "Last Name",
@@ -94,7 +110,6 @@
             },
             "defaultContent": "",
             "orderable": false,
-            "className": "comments edit",
             "createdCell": function( cell, cellData, rowData, rowIndex, colIndex ) {       
               var cell_id = 'comments_' + rowData.id;
               $(cell).attr('id', cell_id ).attr('contenteditable', "true" );
@@ -106,7 +121,7 @@
             "data": "values.tags",
             "defaultContent": "",
             "orderable": false,
-            "className": "tags edit",
+            "className": "tags",
             "createdCell": function( cell, cellData, rowData, rowIndex, colIndex ) {       
               var cell_id = 'tags_' + rowData.id;
               $(cell).attr('id', cell_id ).attr('contenteditable', "true" );
@@ -122,21 +137,11 @@
             },
         },
         { 
-            "title": "Special",
+            "title": "A Boolean, Hidden From View",
             "name": "special", 
             "data": "values.special",
             "defaultContent": "(unknown)",
             "orderable": false,
+            "className": "none",
         },
     ];
-
-    OSC.editable = {
-        "tags": {
-            "path": "data/mock_data.sqlite",
-            "table":"people_editable",
-        },
-        "comments": {
-            "path": "data/mock_data.sqlite",
-            "table":"people_editable",
-        },
-    };

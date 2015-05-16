@@ -8,26 +8,31 @@
 	}
 
 /* Table caption */
-	div#table_container caption { 
+	div#table_container div.caption { 
 		padding-bottom: 20px; 
 		padding-top: 0px; 
 		position: relative;
-		z-index: -1;
+		text-align: left;
+		/*why did I set the z-index?*/
+		z-index: 1000;
 	}
 
-	div#table_container caption span.search { 
+	div#table_container div.caption span.search { 
 		font-weight: bold;
 	}
 
-	div#table_container caption span.filter { 
+	div#table_container div.caption span.filter { 
 		display: block; 
 		margin-top: 2px;
 		font-size: .85em;
 	}
 
-/* Prevent column headers from wrapping */
-	div#table_container thead th { 
+/* Handle column headers wrapping */
+	div#table_container table.nowrap_headers th { 
 		white-space: nowrap; 
+	}
+	div#table_container table.wrap_headers th { 
+		white-space: normal; 
 	}
 
 /* Minimally style the filter row */
@@ -40,7 +45,7 @@
 	    background-color: lightgray;
 	 }
 
-	div#table_container tfoot th {
+	div#table_container tfoot td {
 	    padding-left: 0px;
 	    padding-right: 0px;
 	    font-weight: normal;
@@ -53,6 +58,10 @@
 
 	 div#table_container table input.invalid {
 	     border: solid 1px red;
+	 }
+
+	 div#table_container table input.last_filter {
+	     width: calc(100% - 30px);
 	 }
 
 /* Reset all filters link */
@@ -73,6 +82,7 @@
 		font-size: .8em;
 		color: gray;
 		text-decoration: underline;
+		z-index: 1000;
 	}
 
 
@@ -234,7 +244,7 @@
 	}
 
 /*The Tags*/
-	div#table_container td.tags span {
+	div#table_container tbody td.tags span {
 		background-color: grey;
 		color: #FFF;
 		border-radius: 8px;
@@ -246,26 +256,9 @@
 	}	
 
 /*Boolean Search Instructions*/
-	div#instructions {
-     visibility: hidden;
-     position: fixed;
-     left: 0px;
-     top: 0px;
-     width:100%;
-     height:100%;
-     z-index: 1000;
-     background-color: rgba(0, 0, 0, 0.5);
-    }
 
-    div#instructions div {
-     width:500px;
-     margin: 100px auto;
-     background-color: #fff;
-     border-left:1px solid #000;
-     border-bottom:1px solid #000;
-     padding-left:15px;
-     padding-bottom:15px;
-     font-size: 1em;
+	div#instructions {
+		font-size: 1.4em;
 	}
 
 	div#instructions h2{
@@ -274,28 +267,6 @@
 
 	div#instructions li.not-allowed {
 		text-decoration: line-through; color: red;
-	}
-
-	div#instructions p.close {
-		text-align: center;
-		margin-top: 35px;
-	}
-
-	div#instructions span.close {
-		display: block;
-		text-align: right;
-		font-family: sans-serif;
-		font-weight: bold;
-		font-size: 2em;
-		
-	}
-
-	div#instructions span.close a {
-		display: inline-block;
-		padding: 5px;
-		border: 1px solid black;
-		text-decoration: none;
-		color: black;
 	}
 
 	div#instructions ol > li {
@@ -308,8 +279,35 @@
 	  margin-left: 10px;
 	  margin-right: -10px;
 	  font-size: 1.5em;
-	  /*color: #337ab7!important;*/
 	  cursor: pointer;
 	}
 
+/*Loading Spinner*/
+div.loading {
+   text-align: center;
+}
+
+/* Child row "buttons" */
+div#table_container button.btn-link {
+   padding: 0px;
+   border-top: 0px;
+   color: black;
+}
+
+/* Change color of the child row toggle */
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child::before {
+  background-color: #428bca;
+}
+
+/* Fix focus outline on table pagination*/
+.pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {
+  outline-color: rgb(91, 157, 217);
+  outline-style: auto;
+  outline-width: 4.44444465637207px;
+}
+
+/*footer height*/ 
+footer {
+	height: 700px;
+}
 

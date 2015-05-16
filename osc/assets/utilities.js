@@ -76,7 +76,7 @@ OSC.parse_tags = function(str) {
 }
 
 OSC.reverse_parse_tags = function(string){
-  return string.replace(/<span>/g, "").replace(/<\/span>/g, ",");
+  return string.replace(/<span>/g, "").replace(/<\/span>/g, ",").slice(0,-1);
 }
 
 OSC.filter_tags = function(string){
