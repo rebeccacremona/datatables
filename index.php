@@ -27,7 +27,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#"><img height="40" alt="Harvard DASH" src="img/dash_logo.gif"></a>
+          <a class="navbar-brand" href="#"><img height="40" alt="Harvard DASH logo" src="img/dash_logo.gif"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -49,12 +49,13 @@
 
     <div id="content" tabindex="-1">
 
-        <!-- <div class="jumbotron">
+        <div class="jumbotron">
           <div class="container">
-            <h1>OSC DataTables with Bootstrap</h1>
-            <p>A template OSC DataTable, with all the bells and whistles, embedded in a Bootstrap page. With a Jumbotron because.... because everybody needs a Jumbotron.</p>
+            <h1>DataTables with Bootstrap</h1>
+            <p>A sample DataTable as used by the Harvard Library Office for Scholarly Communication</p>
+            <a href="#" class="btn btn-primary">Get the code</a>
           </div>
-        </div> -->
+        </div>
     	
       <div class="loading">...loading...</div>
       
@@ -63,7 +64,7 @@
       For a fixed width container (width determined by Bootstrap, depending on viewport size), set class="container"
       For wide tables, container-fluid is recommended.  
       -->
-      <div id="table_container" class="container-fluid">
+      <div id="table_container" class="container">
       </div> 
 
   	</div>

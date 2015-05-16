@@ -1,6 +1,6 @@
 /*Controls on top overwrites*/
-div#table_container caption {
-  padding-bottom: 45px;
+div#table_container div.caption {
+  padding-bottom: 0px;
 }
 
 div#table_container div.table-footer {
@@ -8,45 +8,27 @@ div#table_container div.table-footer {
   padding-bottom: 0px;
 }
 
-div#table_container .table-mode {
-  padding: 0px;
-  display: inline-block;
-  position: absolute;
-  top: 25px;
-  left:0;
-  z-index: 1000;
+div#table_container .table-mode div#table-mode-description {
+  display:none;
 }
 
 div#table_container .table-mode .switch label {
   width: 5.5em;
   font-size: .8em;
- }
-
-div#table_container .table-mode div#table-mode-description {
-  display:none;
+  margin-top: 29px;
 }
 
 div#table_container div.dataTables_paginate {
-  margin-top: -3px;
-  display: inline-block;
-  position: absolute;
-  top: 27px;
-  right:0;
-  z-index: 1000;
+  margin-top: 18px;
 }
 
-div.table-details {
+div#table_container div.table-details {
   font-size: .8em;
-  position: absolute;
-  top:45px;
-  left: 60px;
-  z-index: 1000;
+  margin-top: 36px;
 }
 
-div.table-details div {
+div#table_container div.table-details div {
   display: inline-block;
-  margin-top: 0px;
-  padding-left: 10px;
 }
 
 div#table_container div.dataTables_length {
@@ -58,29 +40,43 @@ div#table_container div.dataTables_length select.input-sm {
   padding: 0px 10px;
 }
 
-div#table_container .export-table button {
-  margin-top: -20px;
-  padding: 2px 8px;
+div#table_container div.export-table {
+  padding-left: 15px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  margin-top: 0px;
 }
 
 div#table_container .export-table div#export-table-description {
-  margin-top: -10px;
-  padding-left: 10px;
+  margin-top: -11px;
 }
 
-div#table_container .filter-format .switch {
-  margin-left: -10px;
+div#table_container div.export-table button {
+  padding: 2px 8px;
+  margin-top: -23px;
 }
 
-div#table_container .filter-format .switch label {
-  width: 5.5em;
+div#table_container div.filter-format {
+  padding-left: 15px;
 }
 
-div#table_container .filter-format div#table-filter-description {
-  padding-left: 5px;
+div#table_container .table-mode  div#table-mode-instructions, div#table_container .table-mode div#filter-mode-instructions{
+  display: none;
+}
+
+/* When advanced controls break onto their own line */
+@media (max-width: 1200px) {
+  div#table_container div.table-details {
+    margin-top: 5px;
+    padding-left: 20px;
+  }
+  div#table_container a#reset_filters {   
+  display: none;
+  }
 }
 
 div#table_container a#reset_filters {   
-  top: 45px;
-  left: 555px;
+  right: 40%;
+  z-index: 1000;
+  width: 80px;
 }

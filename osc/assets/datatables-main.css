@@ -8,19 +8,20 @@
 	}
 
 /* Table caption */
-	div#table_container caption { 
+	div#table_container div.caption { 
 		padding-bottom: 20px; 
 		padding-top: 0px; 
 		position: relative;
+		text-align: left;
 		/*why did I set the z-index?*/
-		/*z-index: -1;*/
+		z-index: 1000;
 	}
 
-	div#table_container caption span.search { 
+	div#table_container div.caption span.search { 
 		font-weight: bold;
 	}
 
-	div#table_container caption span.filter { 
+	div#table_container div.caption span.filter { 
 		display: block; 
 		margin-top: 2px;
 		font-size: .85em;
@@ -292,6 +293,11 @@ div#table_container button.btn-link {
    color: black;
 }
 
+/* Change color of the child row toggle */
+table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child::before, table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child::before {
+  background-color: #428bca;
+}
+
 /* Fix focus outline on table pagination*/
 .pagination>li>a:focus, .pagination>li>a:hover, .pagination>li>span:focus, .pagination>li>span:hover {
   outline-color: rgb(91, 157, 217);
@@ -301,5 +307,6 @@ div#table_container button.btn-link {
 
 /*footer height*/ 
 footer {
-	height: 800px;
+	height: 700px;
 }
+

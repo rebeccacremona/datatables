@@ -5,13 +5,14 @@
     // OSC.data is configured in config.php
 
     OSC.table_id = "template_table";
-    OSC.table_name = "The Table";  
+    OSC.table_name = "The Table"; 
+    OSC.table_caption = "A table to demonstrate DataTables as used by the Harvard Library Office for Scholarly Communication" 
 
     // Column filters: 
     // ... basic (appears on page load), 
     // ... advanced (appears in advanced mode),
     // ... none
-    OSC.filters = "basic";
+    OSC.filters = "advanced";
 
     // Load in advanced mode:
     // ... true/false
@@ -32,7 +33,7 @@
     // (collapses columns to toggling child rows, when you run out of room)
     // ... true
     // ... false
-    OSC.responsive = false;
+    OSC.responsive = true;
 
     // Best practices, defining columns:
     // ... Always include a "defaultContent" attribute. (It's sort/searchable.)
@@ -136,10 +137,11 @@
             },
         },
         { 
-            "title": "Special",
+            "title": "A Boolean, Hidden From View",
             "name": "special", 
             "data": "values.special",
             "defaultContent": "(unknown)",
             "orderable": false,
+            "className": "none",
         },
     ];

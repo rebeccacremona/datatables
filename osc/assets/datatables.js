@@ -11,17 +11,17 @@ $(document).ready(function() {
 
     // Prep basic table html
     if (OSC.headers_wrap){
-      var classes = "table table-striped table-hover table-bordered table-condensed wrap_headers"
+      var classes = "table table-striped table-hover table-bordered  wrap_headers"
     } else {
-      var classes = "table table-striped table-hover table-bordered table-condensed nowrap_headers"
+      var classes = "table table-striped table-hover table-bordered  nowrap_headers"
     }
 
     var t_html = '<h2>'+OSC.table_name+'</h2><div class="filter_wrapper">'+
     '<table id="'+OSC.table_id+'" class="' + classes + '" width="100%">' +
-        '<caption tabIndex="-1"></caption>'+ 
+        "<caption class='sr-only'>" + OSC.table_caption + "</caption>" +
         "<thead></thead>" +
         t_footer +       
-    '</table><a id="reset_filters" href="#">reset filters</a>';
+    '</table><a role="button" id="reset_filters" href="#">reset filters</a>';
 
     // Insert
     $('#table_container').html(t_html);
@@ -41,11 +41,11 @@ $(document).ready(function() {
       // Technique from http://www.javascriptkit.com/javatutors/loadjavascriptcss.shtml
       OSC.load_css("osc/assets/datatables-top-controls.css");
 
-      var row_mode_and_pagination = '<"table-mode"><""p>';
-      var row_filter_switch = '<"filter-format">';
-      var row_export = '<"export-table">';
-      var row_entries_length = '<l>';
-      var table_details = '<"table-details"'+ row_entries_length + row_export + row_filter_switch +'>';
+      var div_mode_and_pagination = '<"table-mode col-lg-2 col-sm-6"><"col-lg-5 col-lg-push-5 col-sm-6 col-xs-12"p>';
+      var div_filter_switch = '<"filter-format">';
+      var div_export = '<"export-table">';
+      var div_entries_length = '<""l>';
+      var table_details = '<"table-details col-lg-5 col-lg-pull-5 col-sm-12"'+ div_entries_length + div_export + div_filter_switch +'>';
     
     } else {
       var row_mode_and_pagination = '<"row"<"col-sm-6 col-xs-12 col-sm-push-6"p><"col-sm-6 col-sm-pull-6 col-xs-12 table-mode">>';
@@ -57,14 +57,15 @@ $(document).ready(function() {
     }
 
     var row_table = '<"row"<"col-sm-12"t>>';
+    var row_caption = '<"row"<"caption col-sm-12">>';
     
     
     // Allow individual apps to override
     if (!OSC.dom) {
       if (OSC.table_controls=="top"){
-        OSC.dom = '<"table-footer"'+ row_mode_and_pagination + table_details + '>' + row_table ;
+        OSC.dom = row_caption + '<"row table-footer"'+ div_mode_and_pagination + table_details + '>' + row_table ;
       } else {
-        OSC.dom = row_table + '<"table-footer"'+ row_mode_and_pagination + table_details + '>';
+        OSC.dom = row_caption + row_table + '<"table-footer"'+ row_mode_and_pagination + table_details + '>';
       }
     }
 
@@ -83,6 +84,7 @@ $(document).ready(function() {
         "dom": OSC.dom,
 
         "language": {
+          "lengthMenu": "Show _MENU_",
           "paginate": {
             "previous": "&lt;",
             "next": "&gt;"
@@ -116,7 +118,7 @@ $(document).ready(function() {
 
 // ELEMENT: Add the mode switch
     // Technique from https://www.paypal-engineering.com/2014/01/15/a-sweet-toggle-switch/
-    $("div.table-mode").html('<div id="table-mode-description">Mode:</div>' +
+    $("div.table-mode").attr("role", "menu").html('<div id="table-mode-description">Mode:</div>' +
     '<div id="table-mode-instructions" tabindex="0" class="sr-only sr-only-focusable clearfix">To toggle the switch, press tab again, then use your up/down arrows.</div>' +
     '<div class="switch clearfix"><input type="radio" id="table-mode-basic" name="table-mode" value="basic" class="sr-only" aria-describedby="table-mode-description" />' +
     '<label for="table-mode-basic">Basic</label>' +
@@ -165,11 +167,11 @@ $(document).ready(function() {
       $("#table-mode-advanced").prop("checked", "checked");
     }
 
-// FEATURE: Disable advanced mode for xs screens, when using top buttons
+// FEATURE: Disable advanced mode for sm screens, when using top buttons
 // http://krasimirtsonev.com/blog/article/Using-media-queries-in-JavaScript-AbsurdJS-edition
 
     if(OSC.table_controls=="top"){
-      var mq = window.matchMedia('all and (max-width: 570px)');
+      var mq = window.matchMedia('all and (max-width: 758px)');
       if(mq.matches) {
           $("#table-mode-basic").prop("checked", "checked").trigger("change");
           $("div.table-mode").hide();
@@ -280,7 +282,7 @@ $(document).ready(function() {
         table.search( query, true, false );
         
         // Blank the search box, reset filters, prep keyboard focus, and draw the table
-        OSC.focus = $("#" + OSC.table_id + " caption").first();
+        OSC.focus = $("#table_container div.caption").first();
         input_element.val("");
         $("#table_container tfoot input").val("");
         table.columns().search( '' ).draw();
@@ -294,7 +296,7 @@ $(document).ready(function() {
 
 // FEATURE: On "page" event, set the keyboard focus to the caption
   $('#'+ OSC.table_id).on( 'page.dt', function () {
-      OSC.focus = $(this).find("caption").first();
+      OSC.focus = $("#table_container div.caption").first();
   } );
 
 
@@ -396,14 +398,15 @@ $(document).ready(function() {
 // FEATURE: UX/A11y helpers: 
 //  1) add class to last column filter, and a filter button after it 
 //  2) make child row toggles in first row real buttons
-//  3) make the pagination div programmatically focusable
+//  3) make the caption and pagination divs programmatically focusable
 //  4) improve the pagination controls (should be via a plugin, but.... too hard!!)
 // Doing it here, so that it happens AFTER "Responsive" redraws the table. No event handler assigned.
   OSC.dt.label_last_filter();
   OSC.dt.child_btn();
   OSC.dt.pagination();
   
-  $("#" + OSC.table_id + "_paginate").attr("tabindex", "-1").attr("role", "navigation");
+  $("#table_container div.caption").attr("tabindex", "-1");
+  $("#" + OSC.table_id + "_paginate").attr("tabindex", "-1").attr("role", "navigation").attr("aria-label", "table pages");
 
   // Redo when "Responsive" hides/shows a column 
   $('#'+OSC.table_id).on( 'column-visibility.dt', function ( e, settings, column, state ) {
@@ -426,10 +429,9 @@ OSC.dt = {};
 
 OSC.dt.update_caption = function(info){
 
-    var caption = $("#table_container caption");
+    var caption = $("#table_container div.caption");
 
-    var sr_intro = '<span class="sr-only">'+ OSC.table_name +'</span>';
-    var skip_link = '<a href="#template_table_paginate" class="sr-only sr-only-focusable">Skip to table navigation</a>';
+    var skip_link = '<a href="#template_table_paginate" class="sr-only sr-only-focusable" role="button" aria-label="Skip to table navigation">Skip to table navigation</a>';
 
     OSC.filter_info = "Showing " + (info.start+1).toLocaleString() + " to " + info.end.toLocaleString() + 
     " of " + info.recordsDisplay.toLocaleString() + " records";
@@ -439,25 +441,19 @@ OSC.dt.update_caption = function(info){
       var search_info_span = "<span class='search'>Search Results for: " + OSC.search_string + "</span>";
       var new_cap = search_info_span + filter_span;
       if (OSC.table_controls=="top"){
-        caption.html(sr_intro + new_cap);
-        $("a#reset_filters").css( "top",  "65px" );
-        $("div.table-mode").css("top", "50px");
-        $("div.dataTables_paginate").css("top", "50px");
-        $("div.table-details").css("top", "65px");
+        caption.html(new_cap);
+        $("a#reset_filters").css( "top",  "75px" );
       } else {
-        caption.html(sr_intro + new_cap + skip_link);
+        caption.html(new_cap + skip_link);
         $("a#reset_filters").css( "top",  "40px" );
       }
     } else {
       var new_cap = filter_span;
       if (OSC.table_controls=="top"){;
-        caption.html(sr_intro + new_cap);
-        $("a#reset_filters").css( "top",  "45px" );
-        $("div.table-mode").css("top", "32px");
-        $("div.dataTables_paginate").css("top", "32px");
-        $("div.table-details").css("top", "45px");
+        caption.html(new_cap);
+        $("a#reset_filters").css( "top",  "55px" );
       } else {
-        caption.html(sr_intro + new_cap + skip_link);
+        caption.html(new_cap + skip_link);
         $("a#reset_filters").css( "top",  "23px" )
       }
     }         
@@ -477,7 +473,7 @@ OSC.dt.apply_filter = function(table, colIdx, input){
     var regex = new RegExp(query);  
 
     // If it's a valid regex... 
-    $(this).removeClass("invalid");
+    $(input).removeClass("invalid");
       // ...filter...
       table.column( colIdx ).search( query, true, false );
       return true;
@@ -773,7 +769,7 @@ OSC.dt.child_btn = function(){
   }
 }
 
-//  UX/a11y helper: improve the pagination controls
+// UX/a11y helper: improve the pagination controls
 OSC.dt.pagination = function(){
   
   var sr_most = '<span class="sr-only"> page </span>';
@@ -810,8 +806,5 @@ $.fn.dataTable.Api.register( 'order.neutral()', function () {
 } );
 
 // Accessibility ToDo:
-// Child row buttons are not accessible.
-// The aria live wrapper element needs to be present on page load, I think.
-// Add aria tags that annouce when the sorting has changed.
-// See if I can fix the paging interface.
-// See if I can get a plain html table to read how I want, in VoiceOver, and then see if I can replicate in DataTables
+// This still isn't being read properly......
+// See if I can get a plain html table to read how I want, in VoiceOver and ChromeVox, and then see if I can replicate in DataTables
