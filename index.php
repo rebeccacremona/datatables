@@ -27,14 +27,14 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#"><img height="40" alt="Harvard DASH logo" src="img/dash_logo.gif"></a>
+          <a class="navbar-brand" href="//dash.harvard.edu"><img height="40" alt="Harvard DASH logo" src="img/dash_logo.gif"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
         <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home <span class="sr-only">(current)</span></a></li>
-            <li><a href="#">Elsewhere</a></li>
+            <li><a href="//osc.hul.harvard.edu">About the OSC</a></li>
           </ul>
           <form id="global_search_form" class="navbar-form navbar-right" role="search">
             <p class="help navbar-text navbar-right" tabindex="0" data-toggle="modal" data-target="#instructions" aria-label="search help" role="button">?</p>
@@ -53,7 +53,7 @@
           <div class="container">
             <h1>DataTables with Bootstrap</h1>
             <p>A sample DataTable as used by the Harvard Library Office for Scholarly Communication</p>
-            <a href="#" class="btn btn-primary">Get the code</a>
+            <a href="//github.com/rebeccacremona/datatables" class="btn btn-primary">Get the code</a>
           </div>
         </div>
     	
