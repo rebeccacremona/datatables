@@ -82,6 +82,7 @@
 		font-size: .8em;
 		color: gray;
 		text-decoration: underline;
+		z-index: 1000;
 	}
 
 
