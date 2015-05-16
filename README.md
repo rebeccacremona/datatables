@@ -1,5 +1,6 @@
 # A Harbard Library OSC Datatable
 Built using SpryMedia's impressive [DataTables jQuery plugin](https://www.datatables.net).
+
 [See it in action!](http://curlsandsuch.com/datatable/)
 
 Homespun features:
