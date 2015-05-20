@@ -78,7 +78,7 @@ $(document).ready(function() {
     var table = $('#'+OSC.table_id).DataTable( {
         "responsive": OSC.responsive,
         "deferRender": true,
-        "autoWidth": false,
+        "autoWidth": OSC.auto_width,
 
         "data": OSC.data,
         "columns": OSC.table_columns,

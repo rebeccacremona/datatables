@@ -70,9 +70,7 @@
 
   	</div>
 
-    <?php include('include_in_foot.html') ?>
-
-    <footer>
+    <footer style="display:none">
        <div>
         <ul>
           <li><a href="http://dash.harvard.edu">DASH</a></li>
@@ -81,6 +79,8 @@
         </ul>
       </div>
     </footer>
+
+    <?php include('include_in_foot.html') ?>
     
   </body>
 </html>
