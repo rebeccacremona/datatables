@@ -78,6 +78,7 @@ $(document).ready(function() {
     var table = $('#'+OSC.table_id).DataTable( {
         "responsive": OSC.responsive,
         "deferRender": true,
+        "autoWidth": false,
 
         "data": OSC.data,
         "columns": OSC.table_columns,
@@ -391,8 +392,9 @@ $(document).ready(function() {
         $(this).html(OSC.reverse_parse_tags($(this).html()));
     } );
 
-// Hide the loading indicator
+// Hide the loading indicator, show the footer
   $("div.loading").hide();
+  $("footer").show();
 
 
 // FEATURE: UX/A11y helpers: 

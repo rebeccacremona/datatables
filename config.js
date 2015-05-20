@@ -35,6 +35,11 @@
     // ... false
     OSC.responsive = true;
 
+    // DataTables column autoWidth? 
+    // ... true
+    // ... false
+    OSC.auto_width = true;
+
     // Best practices, defining columns:
     // ... Always include a "defaultContent" attribute. (It's sort/searchable.)
     // ... Always include a "name" attribute. It must be unique. It must not be "q" or start with "SS".
