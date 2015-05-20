@@ -27,7 +27,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="//dash.harvard.edu"><img height="40" alt="Harvard DASH logo" src="img/dash_logo.gif"></a>
+          <a class="navbar-brand" href="http://dash.harvard.edu"><img height="40" alt="Harvard DASH logo" src="img/dash_logo.gif"></a>
         </div>
 
         <!-- Collect the nav links, forms, and other content for toggling -->
@@ -47,13 +47,14 @@
       </div><!-- /.container-fluid -->
     </nav>
 
+    <!-- IF not using a jumbotron, please give div#content a margin-top of 5px  -->
     <div id="content" tabindex="-1">
 
         <div class="jumbotron">
           <div class="container">
             <h1>DataTables with Bootstrap</h1>
             <p>A sample DataTable as used by the Harvard Library Office for Scholarly Communication</p>
-            <a href="//github.com/rebeccacremona/datatables" class="btn btn-primary">Get the code</a>
+            <a href="http://github.com/rebeccacremona/datatables" class="btn btn-primary">Get the code</a>
           </div>
         </div>
     	
@@ -71,7 +72,15 @@
 
     <?php include('include_in_foot.html') ?>
 
-    <footer></footer>
+    <footer>
+       <div>
+        <ul>
+          <li><a href="http://dash.harvard.edu">DASH</a></li>
+          <li><a href="http://osc.hul.harvard.edu/">Office for Scholarly Communication</a></li>
+          <li><a href="http://library.harvard.edu/">Harvard Library</a></li>
+        </ul>
+      </div>
+    </footer>
     
   </body>
 </html>

@@ -415,6 +415,7 @@ $(document).ready(function() {
       OSC.dt.pagination();
   } );
 
+if (typeof OSC.custom == 'function') { OSC.custom(table); }
 
 } )
 
