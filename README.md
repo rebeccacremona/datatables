@@ -1,8 +1,6 @@
 # A Harvard Library OSC Datatable
 Built using SpryMedia's impressive [DataTables jQuery plugin](https://www.datatables.net).
 
-[See it in action!](http://curlsandsuch.com/datatable/)
-
 ## Homespun features:
 - Browser history updates automatically when you change the state of the table (searching, filtering, sorting), so your browser’s “back” button works as expected.
 - Pass in search, filter, and sort settings via URL params.
